@@ -56,7 +56,7 @@ describe('to-vfile', function () {
         it('should throw on fake files', function () {
             assert.throws(function () {
                 toVFile.readSync('foo/bar/baz.bax');
-            }, /ENOENT: no such file or directory, open 'foo\/bar\/baz.bax'/);
+            }, /ENOENT/);
         });
     });
 
@@ -83,7 +83,7 @@ describe('to-vfile', function () {
 
         it('should pass an error for fake files', function (done) {
             toVFile.read('foo/bar/baz.bax', function (err) {
-                equal(String(err), 'Error: ENOENT: no such file or directory, open \'foo\/bar\/baz.bax\'');
+                assert(/ENOENT/.test(err));
 
                 done();
             });
