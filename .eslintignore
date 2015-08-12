@@ -1,0 +1,6 @@
+build/
+components/
+coverage/
+build.js
+to-vfile.js
+to-vfile.min.js
