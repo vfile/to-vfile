@@ -1,92 +1,125 @@
+/**
+ * @author Titus Wormer
+ * @copyright 2015 Titus Wormer
+ * @license MIT
+ * @module to-vfile
+ * @fileoverview Test suite for `to-vfile`.
+ */
+
 'use strict';
 
-/* eslint-env mocha */
-
-/*
- * Dependencies.
- */
-
-var assert = require('assert');
+/* Dependencies. */
+var fs = require('fs');
+var test = require('tape');
+var buffer = require('is-buffer');
+var string = require('x-is-string');
 var toVFile = require('./');
 
-/*
- * Methods.
- */
+/* Start of `readme.md`. */
+var fixture = fs.readFileSync('readme.md', 'utf8');
 
-var equal = assert.strictEqual;
+/* Tests. */
+test('toVFile()', function (t) {
+  t.test('should accept a string as `.path`', function (st) {
+    var file = toVFile('foo/bar/baz.qux');
 
-/*
- * Tests.
- */
+    st.equal(file.path, 'foo/bar/baz.qux');
+    st.equal(file.basename, 'baz.qux');
+    st.equal(file.stem, 'baz');
+    st.equal(file.extname, '.qux');
+    st.equal(file.dirname, 'foo/bar');
+    st.equal(file.contents, undefined);
+    st.end();
+  });
 
-describe('to-vfile', function () {
-    it('should work', function () {
-        var file = toVFile('index.js');
+  t.test('should accept a buffer as `.path`', function (st) {
+    var file = toVFile(new Buffer('readme.md'));
 
-        equal(file.filePath(), 'index.js');
-        equal(file.filename, 'index');
-        equal(file.extension, 'js');
-        equal(file.directory, '.');
-        equal(file.contents, '');
+    st.equal(file.path, 'readme.md');
+    st.equal(file.contents, undefined);
+    st.end();
+  });
+
+  t.test('should accept an object', function (st) {
+    var file = toVFile({
+      dirname: 'foo/bar',
+      stem: 'baz',
+      extname: '.qux'
     });
 
-    it('should work on fake files', function () {
-        var file = toVFile('foo/bar/baz.bax');
+    st.equal(file.path, 'foo/bar/baz.qux');
+    st.equal(file.basename, 'baz.qux');
+    st.equal(file.stem, 'baz');
+    st.equal(file.extname, '.qux');
+    st.equal(file.dirname, 'foo/bar');
+    st.equal(file.contents, undefined);
+    st.end();
+  });
 
-        equal(file.filePath(), 'foo/bar/baz.bax');
-        equal(file.filename, 'baz');
-        equal(file.extension, 'bax');
-        equal(file.directory, 'foo/bar');
-        equal(file.contents, '');
+  t.end();
+});
+
+test('toVFile.readSync', function (t) {
+  t.test('should work (buffer without encoding)', function (st) {
+    var file = toVFile.readSync('readme.md');
+
+    st.equal(file.path, 'readme.md');
+    st.ok(buffer(file.contents));
+    st.equal(file.toString(), fixture);
+    st.end();
+  });
+
+  t.test('should work (string with encoding)', function (st) {
+    var file = toVFile.readSync('readme.md', 'utf8');
+
+    st.equal(file.path, 'readme.md');
+    st.ok(string(file.contents));
+    st.equal(file.toString(), fixture);
+    st.end();
+  });
+
+  t.throws(
+    function () {
+      toVFile.readSync('missing.md');
+    },
+    /ENOENT/,
+    'should throw on non-existing files'
+  );
+
+  t.end();
+});
+
+test('toVFile.read', function (t) {
+  t.test('should work (buffer without encoding)', function (st) {
+    st.plan(4);
+
+    toVFile.read('readme.md', function (err, file) {
+      st.ifErr(err);
+      st.equal(file.path, 'readme.md');
+      st.ok(buffer(file.contents));
+      st.equal(file.toString(), fixture);
     });
+  });
 
-    describe('#sync', function () {
-        it('should work', function () {
-            var file = toVFile.readSync('readme.md');
-            var fixture = '# to-vfile';
-            var result = file.toString().slice(0, fixture.length);
+  t.test('should work (string with encoding)', function (st) {
+    st.plan(4);
 
-            equal(file.filePath(), 'readme.md');
-            equal(file.filename, 'readme');
-            equal(file.extension, 'md');
-            equal(file.directory, '.');
-            equal(result, fixture);
-        });
-
-        it('should throw on fake files', function () {
-            assert.throws(function () {
-                toVFile.readSync('foo/bar/baz.bax');
-            }, /ENOENT/);
-        });
+    toVFile.read('readme.md', 'utf8', function (err, file) {
+      st.ifErr(err);
+      st.equal(file.path, 'readme.md');
+      st.ok(string(file.contents));
+      st.equal(file.toString(), fixture);
     });
+  });
 
-    describe('#async', function () {
-        it('should work', function (done) {
-            toVFile.read('readme.md', function (err, file) {
-                var fixture;
-                var result;
+  t.test('should pass an error on non-existing files', function (st) {
+    st.plan(2);
 
-                assert.ifError(err);
-
-                fixture = '# to-vfile';
-                result = file.toString().slice(0, fixture.length);
-
-                equal(file.filePath(), 'readme.md');
-                equal(file.filename, 'readme');
-                equal(file.extension, 'md');
-                equal(file.directory, '.');
-                equal(result, fixture);
-
-                done();
-            });
-        });
-
-        it('should pass an error for fake files', function (done) {
-            toVFile.read('foo/bar/baz.bax', function (err) {
-                assert(/ENOENT/.test(err));
-
-                done();
-            });
-        });
+    toVFile.read('missing.md', 'utf8', function (err, file) {
+      st.equal(file, undefined);
+      st.ok(/ENOENT/.test(err.message));
     });
+  });
+
+  t.end();
 });

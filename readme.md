@@ -1,132 +1,97 @@
-# to-vfile [![Build Status](https://img.shields.io/travis/wooorm/to-vfile.svg)](https://travis-ci.org/wooorm/to-vfile) [![Coverage Status](https://img.shields.io/codecov/c/github/wooorm/to-vfile.svg)](https://codecov.io/github/wooorm/to-vfile)
+# to-vfile [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
-Create a [vfile](https://github.com/wooorm/vfile) from a file-path.
+Create a [vfile][] from a file-path.  Optionally populates them from
+the file-system as well.
 
 ## Installation
 
-[npm](https://docs.npmjs.com/cli/install):
+[npm][npm-install]:
 
 ```bash
 npm install to-vfile
 ```
 
-**to-vfile** is also available for [bower](http://bower.io/#install-packages),
-[component](https://github.com/componentjs/component), and [duo](http://duojs.org/#getting-started),
-and as an AMD, CommonJS, and globals module, [uncompressed](to-vfile.js) and [compressed](to-vfile.min.js).
-
-> **Note:** browser-builds do not include `read` and `readSync`.
+> **Note:** the file-system stuff is not available in the browser.
 
 ## Usage
 
+Dependencies:
+
 ```js
 var toVFile = require('to-vfile');
+```
 
-var file = toVFile('./readme.md');
-/*
- * { contents: '',
- *   filename: 'readme',
- *   directory: '.',
- *   extension: 'md',
- *   messages: [],
- *   __proto__: [VFile] }
- */
+Create a virtual file by its file-path:
 
-toVFile.read('.git/HEAD', function (err, file) {
-    if (err) throw err;
+```js
+toVFile('readme.md');
+```
 
-    console.log(file);
-    /*
-     * { contents: 'ref: refs/heads/master\n',
-     *   filename: 'HEAD',
-     *   directory: '.git',
-     *   extension: '',
-     *   messages: [],
-     *   __proto__: [VFile] }
-     */
-});
+Yields:
 
-var file = toVFile.readSync('.gitignore')
-/*
- * { contents: '.DS_Store\n*.log\nbower_components/\nbuild/\ncomponents/\nnode_modules/\ncoverage/\nbuild.js\n',
- *   filename: '.gitignore',
- *   directory: '.',
- *   extension: '',
- *   messages: [],
- *   __proto__: [VFile] }
- */
+```js
+VFile {
+  data: {},
+  messages: [],
+  history: [ 'readme.md' ],
+  cwd: '/Users/tilde/projects/oss/to-vfile' }
+```
+
+Populate a virtual file:
+
+```js
+toVFile.readSync('.git/HEAD', 'utf8');
+```
+
+Yields:
+
+```js
+VFile {
+  data: {},
+  messages: [],
+  history: [ '.git/HEAD' ],
+  cwd: '/Users/tilde/projects/oss/to-vfile',
+  contents: 'ref: refs/heads/master\n' }
 ```
 
 ## API
 
-### toVFile(filePath)
+### `toVFile(options)`
 
-Create a virtual file from `filePath`.
+Create a virtual file.  Works like the [vfile][] constructor,
+except when `options` is `string` or `Buffer`, in which case
+it’s treated as `{path: options}` instead of `{contents: options}`.
 
-**Signatures**
+### `toVFile.read(options[, encoding], callback)`
 
-*   `file = toVFile(filePath)`.
+Creates a virtual file from options (`toVFile(options)`), reads the
+file from the file-system and populates `file.contents` with the result.
+If `encoding` is specified, it’s passed to `fs.readFile`.
+Invokes `callback` with either an error or the populated virtual file.
 
-**Parameters**
+### `toVFile.readSync(options[, encoding])`
 
-*   `filePath` (`string`) — Path to a (possibly non-existent) file;
-
-**Returns**
-
-[`vfile`](https://github.com/wooorm/vfile) — Instance.
-
-### toVFile.read(filePath, done)
-
-Create a virtual file from `filePath` and fill it with the actual contents
-at `filePath`.
-
-**Signatures**
-
-*   `toVFile.read(filePath, callback)`.
-
-**Parameters**
-
-*   `filePath` (`string`) — Path to a (possibly non-existent) file;
-*   `callback` — See [`function done(err, vfile)`](#function-doneerr-vfile).
-
-**Returns**
-
-[`vfile`](https://github.com/wooorm/vfile) — Instance.
-
-#### function done(err, vfile)
-
-Callback.
-
-**Signatures**
-
-*   `function done(Error, null)`;
-*   `function done(null, VFile)`.
-
-**Parameters**
-
-*   `err` (`Error`) — Error from reading `filePath`;
-*   `vfile` (`VFile`) — Virtual file.
-
-### toVFile.readSync(filePath)
-
-Create a virtual file from `filePath` and fill it with the actual contents at
-`filePath` (synchroneously).
-
-**Signatures**
-
-*   `toVFile.read(filePath, callback)`.
-
-**Parameters**
-
-*   `filePath` (`string`) — Path to a (possibly non-existent) file;
-
-**Returns**
-
-[`vfile`](https://github.com/wooorm/vfile) — Instance.
-
-**Throw**
-
-`Error` — When reading `filePath` fails.
+Like `toVFile.read` but synchronous.  Either throws an error or
+returns a populated virtual file.
 
 ## License
 
-[MIT](LICENSE) © [Titus Wormer](http://wooorm.com)
+[MIT][license] © [Titus Wormer][author]
+
+<!-- Definitions -->
+
+[travis-badge]: https://img.shields.io/travis/wooorm/to-vfile.svg
+
+[travis]: https://travis-ci.org/wooorm/to-vfile
+
+[codecov-badge]: https://img.shields.io/codecov/c/github/wooorm/to-vfile.svg
+
+[codecov]: https://codecov.io/github/wooorm/to-vfile
+
+[npm-install]: https://docs.npmjs.com/cli/install
+
+[license]: LICENSE
+
+[author]: http://wooorm.com
+
+[vfile]: https://github.com/wooorm/vfile
