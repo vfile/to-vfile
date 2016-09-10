@@ -13,7 +13,7 @@ var fs = require('fs');
 var test = require('tape');
 var buffer = require('is-buffer');
 var string = require('x-is-string');
-var toVFile = require('./');
+var vfile = require('./');
 
 /* Start of `readme.md`. */
 var fixture = fs.readFileSync('readme.md', 'utf8');
@@ -21,7 +21,7 @@ var fixture = fs.readFileSync('readme.md', 'utf8');
 /* Tests. */
 test('toVFile()', function (t) {
   t.test('should accept a string as `.path`', function (st) {
-    var file = toVFile('foo/bar/baz.qux');
+    var file = vfile('foo/bar/baz.qux');
 
     st.equal(file.path, 'foo/bar/baz.qux');
     st.equal(file.basename, 'baz.qux');
@@ -33,7 +33,7 @@ test('toVFile()', function (t) {
   });
 
   t.test('should accept a buffer as `.path`', function (st) {
-    var file = toVFile(new Buffer('readme.md'));
+    var file = vfile(new Buffer('readme.md'));
 
     st.equal(file.path, 'readme.md');
     st.equal(file.contents, undefined);
@@ -41,7 +41,7 @@ test('toVFile()', function (t) {
   });
 
   t.test('should accept an object', function (st) {
-    var file = toVFile({
+    var file = vfile({
       dirname: 'foo/bar',
       stem: 'baz',
       extname: '.qux'
@@ -61,7 +61,7 @@ test('toVFile()', function (t) {
 
 test('toVFile.readSync', function (t) {
   t.test('should work (buffer without encoding)', function (st) {
-    var file = toVFile.readSync('readme.md');
+    var file = vfile.readSync('readme.md');
 
     st.equal(file.path, 'readme.md');
     st.ok(buffer(file.contents));
@@ -70,7 +70,7 @@ test('toVFile.readSync', function (t) {
   });
 
   t.test('should work (string with encoding)', function (st) {
-    var file = toVFile.readSync('readme.md', 'utf8');
+    var file = vfile.readSync('readme.md', 'utf8');
 
     st.equal(file.path, 'readme.md');
     st.ok(string(file.contents));
@@ -80,7 +80,7 @@ test('toVFile.readSync', function (t) {
 
   t.throws(
     function () {
-      toVFile.readSync('missing.md');
+      vfile.readSync('missing.md');
     },
     /ENOENT/,
     'should throw on non-existing files'
@@ -93,7 +93,7 @@ test('toVFile.read', function (t) {
   t.test('should work (buffer without encoding)', function (st) {
     st.plan(4);
 
-    toVFile.read('readme.md', function (err, file) {
+    vfile.read('readme.md', function (err, file) {
       st.ifErr(err);
       st.equal(file.path, 'readme.md');
       st.ok(buffer(file.contents));
@@ -104,7 +104,7 @@ test('toVFile.read', function (t) {
   t.test('should work (string with encoding)', function (st) {
     st.plan(4);
 
-    toVFile.read('readme.md', 'utf8', function (err, file) {
+    vfile.read('readme.md', 'utf8', function (err, file) {
       st.ifErr(err);
       st.equal(file.path, 'readme.md');
       st.ok(string(file.contents));
@@ -115,11 +115,108 @@ test('toVFile.read', function (t) {
   t.test('should pass an error on non-existing files', function (st) {
     st.plan(2);
 
-    toVFile.read('missing.md', 'utf8', function (err, file) {
+    vfile.read('missing.md', 'utf8', function (err, file) {
       st.equal(file, undefined);
       st.ok(/ENOENT/.test(err.message));
     });
   });
 
   t.end();
+});
+
+test('toVFile.writeSync', function (t) {
+  var filePath = 'fixture.txt';
+
+  t.test('should work (buffer without encoding)', function (st) {
+    st.equal(vfile.writeSync({
+      path: filePath,
+      contents: new Buffer('föo')
+    }), undefined);
+
+    st.equal(fs.readFileSync(filePath, 'utf8'), 'föo');
+
+    st.end();
+  });
+
+  t.test('should work (string)', function (st) {
+    st.equal(vfile.writeSync({
+      path: filePath,
+      contents: 'bär'
+    }), undefined);
+
+    st.equal(fs.readFileSync(filePath, 'utf8'), 'bär');
+
+    st.end();
+  });
+
+  t.test('should work (null)', function (st) {
+    st.equal(vfile.writeSync(filePath), undefined);
+
+    st.equal(fs.readFileSync(filePath, 'utf8'), '');
+
+    fs.unlinkSync(filePath);
+
+    st.end();
+  });
+
+  t.end();
+});
+
+test('toVFile.write', function (t) {
+  var filePath = 'fixture.txt';
+
+  t.plan(4);
+
+  t.test('should work (buffer without encoding)', function (st) {
+    st.plan(3);
+
+    vfile.write({
+      path: filePath,
+      contents: new Buffer('bäz')
+    }, function (err, result) {
+      st.ifErr(err);
+      st.equals(result, undefined);
+      st.equal(fs.readFileSync(filePath, 'utf8'), 'bäz');
+    });
+  });
+
+  t.test('should work (string)', function (st) {
+    st.plan(3);
+
+    vfile.write({
+      path: filePath,
+      contents: 'qüx'
+    }, function (err, result) {
+      st.ifErr(err);
+      st.equals(result, undefined);
+      st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx');
+    });
+  });
+
+  t.test('should work (string with encoding)', function (st) {
+    st.plan(3);
+
+    vfile.write({
+      path: filePath,
+      contents: '62c3a472'
+    }, 'hex', function (err, result) {
+      st.ifErr(err);
+      st.equals(result, undefined);
+      st.equal(fs.readFileSync(filePath, 'utf8'), 'bär');
+    });
+  });
+
+  t.test('should work (null)', function (st) {
+    st.plan(3);
+
+    vfile.write(filePath, function (err, result) {
+      var doc = fs.readFileSync(filePath, 'utf8');
+
+      fs.unlinkSync(filePath);
+
+      st.ifErr(err);
+      st.equals(result, undefined);
+      st.equal(doc, '');
+    });
+  });
 });

@@ -1,7 +1,7 @@
 # to-vfile [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
 Create a [vfile][] from a file-path.  Optionally populates them from
-the file-system as well.
+the file-system as well.  Can write virtual files to file-system too.
 
 ## Installation
 
@@ -73,6 +73,16 @@ Invokes `callback` with either an error or the populated virtual file.
 
 Like `toVFile.read` but synchronous.  Either throws an error or
 returns a populated virtual file.
+
+### `toVFile.write(options[, fsOptions], callback)`
+
+Creates a virtual file from `options` (`toVFile(options)`), writes the
+file to the file-system.  `fsOptions` are passed to `fs.writeFile`.
+Invokes `callback` with an error, if any.
+
+### `toVFile.writeSync(options[, fsOptions])`
+
+Like `toVFile.write` but synchronous.  Throws an error, if any.
 
 ## License
 
