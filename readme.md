@@ -15,15 +15,9 @@ npm install to-vfile
 
 ## Usage
 
-Dependencies:
-
 ```js
 var toVFile = require('to-vfile');
-```
 
-Create a virtual file by its file-path:
-
-```js
 toVFile('readme.md');
 ```
 
