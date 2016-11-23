@@ -1,14 +1,5 @@
-/**
- * @author Titus Wormer
- * @copyright 2015 Titus Wormer
- * @license MIT
- * @module to-vfile
- * @fileoverview Test suite for `to-vfile`.
- */
-
 'use strict';
 
-/* Dependencies. */
 var fs = require('fs');
 var test = require('tape');
 var buffer = require('is-buffer');
@@ -18,7 +9,6 @@ var vfile = require('./');
 /* Start of `readme.md`. */
 var fixture = fs.readFileSync('readme.md', 'utf8');
 
-/* Tests. */
 test('toVFile()', function (t) {
   t.test('should accept a string as `.path`', function (st) {
     var file = vfile('foo/bar/baz.qux');
