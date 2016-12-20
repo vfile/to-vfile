@@ -23,8 +23,8 @@
     "lib",
     "index.js"
   ],
-  "repository": "https://github.com/wooorm/to-vfile",
-  "bugs": "https://github.com/wooorm/to-vfile/issues",
+  "repository": "https://github.com/vfile/to-vfile",
+  "bugs": "https://github.com/vfile/to-vfile/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"

@@ -84,13 +84,13 @@ Like `toVFile.write` but synchronous.  Throws an error, if any.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/wooorm/to-vfile.svg
+[travis-badge]: https://img.shields.io/travis/vfile/to-vfile.svg
 
-[travis]: https://travis-ci.org/wooorm/to-vfile
+[travis]: https://travis-ci.org/vfile/to-vfile
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/wooorm/to-vfile.svg
+[codecov-badge]: https://img.shields.io/codecov/c/github/vfile/to-vfile.svg
 
-[codecov]: https://codecov.io/github/wooorm/to-vfile
+[codecov]: https://codecov.io/github/vfile/to-vfile
 
 [npm-install]: https://docs.npmjs.com/cli/install
 
@@ -98,4 +98,4 @@ Like `toVFile.write` but synchronous.  Throws an error, if any.
 
 [author]: http://wooorm.com
 
-[vfile]: https://github.com/wooorm/vfile
+[vfile]: https://github.com/vfile/vfile
