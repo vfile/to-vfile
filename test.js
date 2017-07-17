@@ -22,7 +22,7 @@ test('toVFile()', function (t) {
   });
 
   t.test('should accept a buffer as `.path`', function (st) {
-    var file = vfile(Buffer.from('readme.md'));
+    var file = vfile(new Buffer('readme.md'));
 
     st.equal(file.path, 'readme.md');
     st.equal(file.contents, undefined);
@@ -119,7 +119,7 @@ test('toVFile.writeSync', function (t) {
   t.test('should work (buffer without encoding)', function (st) {
     st.equal(vfile.writeSync({
       path: filePath,
-      contents: Buffer.from('föo')
+      contents: new Buffer('föo')
     }), undefined);
 
     st.equal(fs.readFileSync(filePath, 'utf8'), 'föo');
@@ -161,7 +161,7 @@ test('toVFile.write', function (t) {
 
     vfile.write({
       path: filePath,
-      contents: Buffer.from('bäz')
+      contents: new Buffer('bäz')
     }, function (err, result) {
       st.ifErr(err);
       st.equals(result, undefined);
