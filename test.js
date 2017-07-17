@@ -6,7 +6,7 @@ var buffer = require('is-buffer');
 var string = require('x-is-string');
 var vfile = require('./');
 
-/* Start of `readme.md`. */
+/* Start of with `readme.md`. */
 var fixture = fs.readFileSync('readme.md', 'utf8');
 
 test('toVFile()', function (t) {
