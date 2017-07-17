@@ -3,7 +3,6 @@
 var fs = require('fs');
 var test = require('tape');
 var buffer = require('is-buffer');
-var string = require('x-is-string');
 var vfile = require('./');
 
 /* Start of with `readme.md`. */
@@ -63,7 +62,7 @@ test('toVFile.readSync', function (t) {
     var file = vfile.readSync('readme.md', 'utf8');
 
     st.equal(file.path, 'readme.md');
-    st.ok(string(file.contents));
+    st.equal(typeof file.contents, 'string');
     st.equal(file.toString(), fixture);
     st.end();
   });
@@ -97,7 +96,7 @@ test('toVFile.read', function (t) {
     vfile.read('readme.md', 'utf8', function (err, file) {
       st.ifErr(err);
       st.equal(file.path, 'readme.md');
-      st.ok(string(file.contents));
+      st.equal(typeof file.contents, 'string');
       st.equal(file.toString(), fixture);
     });
   });
