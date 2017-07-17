@@ -1,24 +1,26 @@
 # to-vfile [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
-Create a [vfile][] from a file-path.  Optionally populates them from
+Create a [`vfile`][vfile] from a file-path.  Optionally populates them from
 the file-system as well.  Can write virtual files to file-system too.
 
 ## Installation
 
-[npm][npm-install]:
+[npm][]:
 
 ```bash
 npm install to-vfile
 ```
 
-> **Note:** the file-system stuff is not available in the browser.
+> **Note**: the file-system stuff is not available in the browser.
 
 ## Usage
 
 ```js
-var toVFile = require('to-vfile');
+var vfile = require('to-vfile');
 
-toVFile('readme.md');
+console.log(vfile('readme.md'));
+console.log(vfile.readSync('.git/HEAD'));
+console.log(vfile.readSync('.git/HEAD', 'utf8'));
 ```
 
 Yields:
@@ -29,17 +31,12 @@ VFile {
   messages: [],
   history: [ 'readme.md' ],
   cwd: '/Users/tilde/projects/oss/to-vfile' }
-```
-
-Populate a virtual file:
-
-```js
-toVFile.readSync('.git/HEAD', 'utf8');
-```
-
-Yields:
-
-```js
+VFile {
+  data: {},
+  messages: [],
+  history: [ '.git/HEAD' ],
+  cwd: '/Users/tilde/projects/oss/to-vfile',
+  contents: <Buffer 72 65 66 3a 20 72 65 66 73 2f 68 65 61 64 73 2f 6d 61 73 74 65 72 0a> }
 VFile {
   data: {},
   messages: [],
@@ -92,7 +89,7 @@ Like `toVFile.write` but synchronous.  Throws an error, if any.
 
 [codecov]: https://codecov.io/github/vfile/to-vfile
 
-[npm-install]: https://docs.npmjs.com/cli/install
+[npm]: https://docs.npmjs.com/cli/install
 
 [license]: LICENSE
 
