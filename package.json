@@ -12,22 +12,22 @@
     "file",
     "path"
   ],
-  "dependencies": {
-    "is-buffer": "^1.1.4",
-    "vfile": "^2.0.0"
-  },
+  "repository": "vfile/to-vfile",
+  "bugs": "https://github.com/vfile/to-vfile/issues",
+  "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
+  "contributors": [
+    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
+  ],
   "main": "index.js",
   "browser": "lib/core.js",
   "files": [
     "lib",
     "index.js"
   ],
-  "repository": "https://github.com/vfile/to-vfile",
-  "bugs": "https://github.com/vfile/to-vfile/issues",
-  "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
-  "contributors": [
-    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
-  ],
+  "dependencies": {
+    "is-buffer": "^1.1.4",
+    "vfile": "^2.0.0"
+  },
   "devDependencies": {
     "browserify": "^14.0.0",
     "esmangle": "^1.0.1",
