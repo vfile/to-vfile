@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - '4.0'
-- '8.0'
+- '9.0'
 after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
   - provider: npm
@@ -11,7 +11,7 @@ deploy:
       secure: M8NVYG2YKjA2VaAHzIo6KL+8lidrGqR1XTEBJ4yb49EiBz5ESjwUz9lhWB1OhOO5Z4g7MSqi3TmPkNfv7Y2QNHm+Cw2rfetOfYnmD0q1jcfFZAb0XuZRutFsYJmqswMZLAGs9eROuU/ETA2SwKJvN+k+AB0VHR+JKngzX6RH8tx4geHQ6nxUDkcFxItoLH2QR3enFJ59W7D/H0G2ZeR90B6S60nDoZ0NG1HFC4YNqiQoBaWAs4rP2FGA7ydMbqsc/hBbgz4eakOf4EErwVQ4OZZCM+oEaumS0cqsETzuewwnS+rRwaiJLRuvOqTqTfVSmbnJlmXzHUodpCxfYTP9hYgzqUu+9S1lfNvKbzJs859knSgkrdLA9zwiKaPSmM72+h5crUiNsWJsROmAn6xJrDAuh8QDLIjLdKRWORWoL5smh9nU82Q1hhMgFNYwdNI5JE7bmoC2QXl01HOR+EgwnXhmhZeUU+jGQesVqpunyaNpyp4P1vbw+LtBrFdVEUkaQWGQ+MQ7Ic11ITT6eohIJgcdwyhsENkNLm6uIyCKpRGUZDsXdIhfTI6MxB9FgjxhFs+/0T8fgpcPKSYf5hdWev7ZFdrl9pLZxNEHPG6WZ3CB/WFTbygcm8KQ0EE1cAFi62tZQpIrY683P6NJVdXAHwP4tXbDMDP8bjGkF9NDC4o=
     on:
       tags: true
-      node: '4.0'
+      node: '9.0'
   - provider: releases
     skip_cleanup: true
     api_key:
@@ -21,4 +21,4 @@ deploy:
       - "to-vfile.min.js"
     on:
       tags: true
-      node: '8.0'
+      node: '9.0'
