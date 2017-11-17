@@ -75,6 +75,13 @@ Invokes `callback` with an error, if any.
 
 Like `toVFile.write` but synchronous.  Throws an error, if any.
 
+## Contribute
+
+See [`contribute.md` in `vfile/vfile`][contribute] for ways to get started.
+
+This organisation has a [Code of Conduct][coc].  By interacting with this
+repository, organisation, or community you agree to abide by its terms.
+
 ## License
 
 [MIT][license] © [Titus Wormer][author]
@@ -96,3 +103,7 @@ Like `toVFile.write` but synchronous.  Throws an error, if any.
 [author]: http://wooorm.com
 
 [vfile]: https://github.com/vfile/vfile
+
+[contribute]: https://github.com/vfile/vfile/blob/master/contributing.md
+
+[coc]: https://github.com/vfile/vfile/blob/master/code-of-conduct.md
