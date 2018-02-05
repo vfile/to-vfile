@@ -53,23 +53,28 @@ Create a virtual file.  Works like the [vfile][] constructor,
 except when `options` is `string` or `Buffer`, in which case
 it’s treated as `{path: options}` instead of `{contents: options}`.
 
-### `toVFile.read(options[, encoding], callback)`
+### `toVFile.read(options[, encoding][, callback])`
 
 Creates a virtual file from options (`toVFile(options)`), reads the
 file from the file-system and populates `file.contents` with the result.
 If `encoding` is specified, it’s passed to `fs.readFile`.
-Invokes `callback` with either an error or the populated virtual file.
+If `callback` is given, invokes it with either an error or the populated
+virtual file.
+If `callback` is not given, returns a [`Promise`][promise] that is
+rejected with an error or resolved with the populated virtual file.
 
 ### `toVFile.readSync(options[, encoding])`
 
 Like `toVFile.read` but synchronous.  Either throws an error or
 returns a populated virtual file.
 
-### `toVFile.write(options[, fsOptions], callback)`
+### `toVFile.write(options[, fsOptions][, callback])`
 
 Creates a virtual file from `options` (`toVFile(options)`), writes the
 file to the file-system.  `fsOptions` are passed to `fs.writeFile`.
-Invokes `callback` with an error, if any.
+If `callback` is given, invokes it with an error, if any.
+If `callback` is not given, returns a [`Promise`][promise] that is
+rejected with an error or resolved without any value.
 
 ### `toVFile.writeSync(options[, fsOptions])`
 
@@ -103,6 +108,8 @@ repository, organisation, or community you agree to abide by its terms.
 [author]: http://wooorm.com
 
 [vfile]: https://github.com/vfile/vfile
+
+[promise]: https://developer.mozilla.org/Web/JavaScript/Reference/Global_Objects/Promise
 
 [contribute]: https://github.com/vfile/vfile/blob/master/contributing.md
 
