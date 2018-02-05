@@ -44,8 +44,6 @@ test('toVFile()', function (t) {
     st.equal(file.contents, undefined);
     st.end();
   });
-
-  t.end();
 });
 
 test('toVFile.readSync', function (t) {
@@ -74,8 +72,6 @@ test('toVFile.readSync', function (t) {
     /ENOENT/,
     'should throw on non-existing files'
   );
-
-  t.end();
 });
 
 test('toVFile.read', function (t) {
@@ -196,8 +192,6 @@ test('toVFile.writeSync', function (t) {
     /ENOENT/,
     'should throw on files that cannot be written'
   );
-
-  t.end();
 });
 
 test('toVFile.write', function (t) {
