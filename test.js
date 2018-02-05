@@ -100,7 +100,7 @@ test('toVFile.read', function (t) {
         st.equal(file.toString(), fixture);
       })
       .catch(function () {
-        t.fail('should resolve, not reject');
+        st.fail('should resolve, not reject');
       });
   });
 
