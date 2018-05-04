@@ -16,11 +16,11 @@ npm install to-vfile
 ## Usage
 
 ```js
-var vfile = require('to-vfile');
+var vfile = require('to-vfile')
 
-console.log(vfile('readme.md'));
-console.log(vfile.readSync('.git/HEAD'));
-console.log(vfile.readSync('.git/HEAD', 'utf8'));
+console.log(vfile('readme.md'))
+console.log(vfile.readSync('.git/HEAD'))
+console.log(vfile.readSync('.git/HEAD', 'utf8'))
 ```
 
 Yields:

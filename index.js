@@ -1,2 +1,2 @@
-'use strict';
-module.exports = require('./lib/fs');
+'use strict'
+module.exports = require('./lib/fs')
