@@ -3,7 +3,7 @@
 var fs = require('fs');
 var test = require('tape');
 var buffer = require('is-buffer');
-var vfile = require('./');
+var vfile = require('.');
 
 /* Start of with `readme.md`. */
 var fixture = fs.readFileSync('readme.md', 'utf8');
@@ -22,7 +22,7 @@ test('toVFile()', function (t) {
   });
 
   t.test('should accept a buffer as `.path`', function (st) {
-    var file = vfile(new Buffer('readme.md'));
+    var file = vfile(Buffer.from('readme.md'));
 
     st.equal(file.path, 'readme.md');
     st.equal(file.contents, undefined);
@@ -156,7 +156,7 @@ test('toVFile.writeSync', function (t) {
   t.test('should work (buffer without encoding)', function (st) {
     st.equal(vfile.writeSync({
       path: filePath,
-      contents: new Buffer('föo')
+      contents: Buffer.from('föo')
     }), undefined);
 
     st.equal(fs.readFileSync(filePath, 'utf8'), 'föo');
@@ -203,7 +203,7 @@ test('toVFile.write', function (t) {
 
     vfile.write({
       path: filePath,
-      contents: new Buffer('bäz')
+      contents: Buffer.from('bäz')
     }, function (err, result) {
       st.ifErr(err);
       st.equal(result, undefined);
