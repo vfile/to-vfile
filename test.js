@@ -88,6 +88,23 @@ test('toVFile.readSync', function(t) {
     st.end()
   })
 
+  t.test(
+    'should honor file.cwd when file.path is relative, even with relative cwd',
+    function(st) {
+      var file = vfile.readSync(
+        {
+          path: 'core.js',
+          cwd: 'lib'
+        },
+        'utf8'
+      )
+
+      st.equal(typeof file.contents, 'string')
+
+      st.end()
+    }
+  )
+
   t.throws(
     function() {
       vfile.readSync({
