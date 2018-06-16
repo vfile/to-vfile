@@ -1,6 +1,7 @@
 'use strict'
 
 var fs = require('fs')
+var path = require('path')
 var test = require('tape')
 var buffer = require('is-buffer')
 var vfile = require('.')
@@ -71,6 +72,48 @@ test('toVFile.readSync', function(t) {
     },
     /ENOENT/,
     'should throw on non-existing files'
+  )
+
+  t.test('should honor file.cwd when file.path is relative', function(st) {
+    var file = vfile.readSync(
+      {
+        path: 'core.js',
+        cwd: path.join(process.cwd(), 'lib')
+      },
+      'utf8'
+    )
+
+    st.equal(typeof file.contents, 'string')
+
+    st.end()
+  })
+
+  t.test(
+    'should honor file.cwd when file.path is relative, even with relative cwd',
+    function(st) {
+      var file = vfile.readSync(
+        {
+          path: 'core.js',
+          cwd: 'lib'
+        },
+        'utf8'
+      )
+
+      st.equal(typeof file.contents, 'string')
+
+      st.end()
+    }
+  )
+
+  t.throws(
+    function() {
+      vfile.readSync({
+        path: path.join(process.cwd(), 'core.js'),
+        cwd: path.join(process.cwd(), 'lib')
+      })
+    },
+    /ENOENT/,
+    'should ignore file.cwd when file.path is absolute'
   )
 })
 
