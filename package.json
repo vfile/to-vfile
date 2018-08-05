@@ -1,6 +1,6 @@
 {
   "name": "to-vfile",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Create a vfile from a file-path",
   "license": "MIT",
   "keywords": [
