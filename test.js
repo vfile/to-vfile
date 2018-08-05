@@ -48,6 +48,14 @@ test('toVFile()', function(t) {
 })
 
 test('toVFile.readSync', function(t) {
+  t.test('should fail without path', function(st) {
+    st.throws(function() {
+      vfile.readSync()
+    }, /path/i)
+
+    st.end()
+  })
+
   t.test('should work (buffer without encoding)', function(st) {
     var file = vfile.readSync('readme.md')
 
@@ -75,13 +83,8 @@ test('toVFile.readSync', function(t) {
   )
 
   t.test('should honor file.cwd when file.path is relative', function(st) {
-    var file = vfile.readSync(
-      {
-        path: 'core.js',
-        cwd: path.join(process.cwd(), 'lib')
-      },
-      'utf8'
-    )
+    var cwd = path.join(process.cwd(), 'lib')
+    var file = vfile.readSync({path: 'core.js', cwd: cwd}, 'utf8')
 
     st.equal(typeof file.contents, 'string')
 
@@ -91,13 +94,7 @@ test('toVFile.readSync', function(t) {
   t.test(
     'should honor file.cwd when file.path is relative, even with relative cwd',
     function(st) {
-      var file = vfile.readSync(
-        {
-          path: 'core.js',
-          cwd: 'lib'
-        },
-        'utf8'
-      )
+      var file = vfile.readSync({path: 'core.js', cwd: 'lib'}, 'utf8')
 
       st.equal(typeof file.contents, 'string')
 
@@ -118,6 +115,14 @@ test('toVFile.readSync', function(t) {
 })
 
 test('toVFile.read', function(t) {
+  t.test('should pass an error without path', function(st) {
+    st.plan(1)
+
+    vfile.read(null, function(err) {
+      st.ok(/path/i.test(err))
+    })
+  })
+
   t.test('should work (buffer without encoding)', function(st) {
     st.plan(4)
 
@@ -199,12 +204,17 @@ test('toVFile.writeSync', function(t) {
   var filePath = 'fixture.txt'
   var invalidFilePath = 'invalid/path/to/fixture.txt'
 
+  t.test('should fail without path', function(st) {
+    st.throws(function() {
+      vfile.writeSync()
+    }, /path/i)
+
+    st.end()
+  })
+
   t.test('should work (buffer without encoding)', function(st) {
     st.equal(
-      vfile.writeSync({
-        path: filePath,
-        contents: Buffer.from('föo')
-      }),
+      vfile.writeSync({path: filePath, contents: Buffer.from('föo')}),
       undefined
     )
 
@@ -214,13 +224,7 @@ test('toVFile.writeSync', function(t) {
   })
 
   t.test('should work (string)', function(st) {
-    st.equal(
-      vfile.writeSync({
-        path: filePath,
-        contents: 'bär'
-      }),
-      undefined
-    )
+    st.equal(vfile.writeSync({path: filePath, contents: 'bär'}), undefined)
 
     st.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
 
@@ -250,46 +254,43 @@ test('toVFile.write', function(t) {
   var filePath = 'fixture.txt'
   var invalidFilePath = 'invalid/path/to/fixture.txt'
 
+  t.test('should pass an error without path', function(st) {
+    st.plan(1)
+
+    vfile.write(null, function(err) {
+      st.ok(/path/i.test(err))
+    })
+  })
+
   t.test('should work (buffer without encoding)', function(st) {
+    var file = {path: filePath, contents: Buffer.from('bäz')}
+
     st.plan(3)
 
-    vfile.write(
-      {
-        path: filePath,
-        contents: Buffer.from('bäz')
-      },
-      function(err, result) {
-        st.ifErr(err)
-        st.equal(result, undefined)
-        st.equal(fs.readFileSync(filePath, 'utf8'), 'bäz')
-      }
-    )
+    vfile.write(file, function(err, result) {
+      st.ifErr(err)
+      st.equal(result, undefined)
+      st.equal(fs.readFileSync(filePath, 'utf8'), 'bäz')
+    })
   })
 
   t.test('should work (string)', function(st) {
+    var file = {path: filePath, contents: 'qüx'}
+
     st.plan(3)
 
-    vfile.write(
-      {
-        path: filePath,
-        contents: 'qüx'
-      },
-      function(err, result) {
-        st.ifErr(err)
-        st.equal(result, undefined)
-        st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx')
-      }
-    )
+    vfile.write(file, function(err, result) {
+      st.ifErr(err)
+      st.equal(result, undefined)
+      st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx')
+    })
   })
 
   t.test('should work in promise mode (string)', function(st) {
     st.plan(2)
 
     vfile
-      .write({
-        path: filePath,
-        contents: 'qüx-promise'
-      })
+      .write({path: filePath, contents: 'qüx-promise'})
       .then(function(result) {
         st.equal(result, undefined)
         st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx-promise')
@@ -300,33 +301,22 @@ test('toVFile.write', function(t) {
   })
 
   t.test('should work (string with encoding)', function(st) {
+    var file = {path: filePath, contents: '62c3a472'}
+
     st.plan(3)
 
-    vfile.write(
-      {
-        path: filePath,
-        contents: '62c3a472'
-      },
-      'hex',
-      function(err, result) {
-        st.ifErr(err)
-        st.equal(result, undefined)
-        st.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
-      }
-    )
+    vfile.write(file, 'hex', function(err, result) {
+      st.ifErr(err)
+      st.equal(result, undefined)
+      st.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
+    })
   })
 
   t.test('should work in promise mode (string with encoding)', function(st) {
     st.plan(3)
 
     vfile
-      .write(
-        {
-          path: filePath,
-          contents: '62c3a4722d70726f6d697365'
-        },
-        'hex'
-      )
+      .write({path: filePath, contents: '62c3a4722d70726f6d697365'}, 'hex')
       .then(function(err, result) {
         st.ifErr(err)
         st.equal(result, undefined)
@@ -369,21 +359,18 @@ test('toVFile.write', function(t) {
       })
   })
 
-  t.test('should return an error for files that cannot be written', function(
-    st
-  ) {
-    st.plan(2)
+  t.test('should pass an error for files that cannot be written', function(st) {
+    st.plan(1)
 
     vfile.write(invalidFilePath, function(err) {
-      st.ok(err instanceof Error)
       st.ok(/ENOENT/.test(err.message))
     })
   })
 
   t.test(
-    'should return reject for files that cannot be written in promise mode',
+    'should reject for files that cannot be written in promise mode',
     function(st) {
-      st.plan(2)
+      st.plan(1)
 
       vfile
         .write(invalidFilePath)
@@ -391,7 +378,6 @@ test('toVFile.write', function(t) {
           st.fail('should reject, not resolve')
         })
         .catch(function(err) {
-          st.ok(err instanceof Error)
           st.ok(/ENOENT/.test(err.message))
         })
     }
