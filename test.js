@@ -118,16 +118,16 @@ test('toVFile.read', function(t) {
   t.test('should pass an error without path', function(st) {
     st.plan(1)
 
-    vfile.read(null, function(err) {
-      st.ok(/path/i.test(err))
+    vfile.read(null, function(error) {
+      st.ok(/path/i.test(error))
     })
   })
 
   t.test('should work (buffer without encoding)', function(st) {
     st.plan(4)
 
-    vfile.read('readme.md', function(err, file) {
-      st.ifErr(err)
+    vfile.read('readme.md', function(error, file) {
+      st.ifErr(error)
       st.equal(file.path, 'readme.md')
       st.ok(buffer(file.contents))
       st.equal(file.toString(), fixture)
@@ -152,8 +152,8 @@ test('toVFile.read', function(t) {
   t.test('should work (string with encoding)', function(st) {
     st.plan(4)
 
-    vfile.read('readme.md', 'utf8', function(err, file) {
-      st.ifErr(err)
+    vfile.read('readme.md', 'utf8', function(error, file) {
+      st.ifErr(error)
       st.equal(file.path, 'readme.md')
       st.equal(typeof file.contents, 'string')
       st.equal(file.toString(), fixture)
@@ -178,10 +178,10 @@ test('toVFile.read', function(t) {
   t.test('should return an error on non-existing files', function(st) {
     st.plan(3)
 
-    vfile.read('missing.md', 'utf8', function(err, file) {
+    vfile.read('missing.md', 'utf8', function(error, file) {
       st.equal(file, undefined)
-      st.ok(err instanceof Error)
-      st.ok(/ENOENT/.test(err.message))
+      st.ok(error instanceof Error)
+      st.ok(/ENOENT/.test(error.message))
     })
   })
 
@@ -193,9 +193,9 @@ test('toVFile.read', function(t) {
       .then(function() {
         st.fail('should reject, not resolve')
       })
-      .catch(function(err) {
-        st.ok(err instanceof Error)
-        st.ok(/ENOENT/.test(err.message))
+      .catch(function(error) {
+        st.ok(error instanceof Error)
+        st.ok(/ENOENT/.test(error.message))
       })
   })
 })
@@ -257,8 +257,8 @@ test('toVFile.write', function(t) {
   t.test('should pass an error without path', function(st) {
     st.plan(1)
 
-    vfile.write(null, function(err) {
-      st.ok(/path/i.test(err))
+    vfile.write(null, function(error) {
+      st.ok(/path/i.test(error))
     })
   })
 
@@ -267,8 +267,8 @@ test('toVFile.write', function(t) {
 
     st.plan(3)
 
-    vfile.write(file, function(err, result) {
-      st.ifErr(err)
+    vfile.write(file, function(error, result) {
+      st.ifErr(error)
       st.equal(result, undefined)
       st.equal(fs.readFileSync(filePath, 'utf8'), 'bäz')
     })
@@ -279,8 +279,8 @@ test('toVFile.write', function(t) {
 
     st.plan(3)
 
-    vfile.write(file, function(err, result) {
-      st.ifErr(err)
+    vfile.write(file, function(error, result) {
+      st.ifErr(error)
       st.equal(result, undefined)
       st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx')
     })
@@ -305,8 +305,8 @@ test('toVFile.write', function(t) {
 
     st.plan(3)
 
-    vfile.write(file, 'hex', function(err, result) {
-      st.ifErr(err)
+    vfile.write(file, 'hex', function(error, result) {
+      st.ifErr(error)
       st.equal(result, undefined)
       st.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
     })
@@ -317,8 +317,8 @@ test('toVFile.write', function(t) {
 
     vfile
       .write({path: filePath, contents: '62c3a4722d70726f6d697365'}, 'hex')
-      .then(function(err, result) {
-        st.ifErr(err)
+      .then(function(error, result) {
+        st.ifErr(error)
         st.equal(result, undefined)
         st.equal(fs.readFileSync(filePath, 'utf8'), 'bär-promise')
       })
@@ -330,12 +330,12 @@ test('toVFile.write', function(t) {
   t.test('should work (null)', function(st) {
     st.plan(3)
 
-    vfile.write(filePath, function(err, result) {
+    vfile.write(filePath, function(error, result) {
       var doc = fs.readFileSync(filePath, 'utf8')
 
       fs.unlinkSync(filePath)
 
-      st.ifErr(err)
+      st.ifErr(error)
       st.equal(result, undefined)
       st.equal(doc, '')
     })
@@ -362,8 +362,8 @@ test('toVFile.write', function(t) {
   t.test('should pass an error for files that cannot be written', function(st) {
     st.plan(1)
 
-    vfile.write(invalidFilePath, function(err) {
-      st.ok(/ENOENT/.test(err.message))
+    vfile.write(invalidFilePath, function(error) {
+      st.ok(/ENOENT/.test(error.message))
     })
   })
 
@@ -377,8 +377,8 @@ test('toVFile.write', function(t) {
         .then(function() {
           st.fail('should reject, not resolve')
         })
-        .catch(function(err) {
-          st.ok(/ENOENT/.test(err.message))
+        .catch(function(error) {
+          st.ok(/ENOENT/.test(error.message))
         })
     }
   )
