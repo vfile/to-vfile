@@ -14,9 +14,9 @@
   ],
   "repository": "vfile/to-vfile",
   "bugs": "https://github.com/vfile/to-vfile/issues",
-  "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
+  "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
   "contributors": [
-    "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
+    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
   ],
   "main": "index.js",
   "browser": "lib/core.js",

@@ -105,7 +105,7 @@ repository, organisation, or community you agree to abide by its terms.
 
 [license]: LICENSE
 
-[author]: http://wooorm.com
+[author]: https://wooorm.com
 
 [vfile]: https://github.com/vfile/vfile
 
