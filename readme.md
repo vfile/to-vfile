@@ -1,4 +1,9 @@
-# to-vfile [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
+# to-vfile
+
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![Chat][chat-badge]][chat]
 
 Create a [`vfile`][vfile] from a file-path.  Optionally populates them from
 the file-system as well.  Can write virtual files to file-system too.
@@ -93,13 +98,21 @@ repository, organisation, or community you agree to abide by its terms.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/vfile/to-vfile.svg
+[build-badge]: https://img.shields.io/travis/vfile/to-vfile.svg
 
-[travis]: https://travis-ci.org/vfile/to-vfile
+[build]: https://travis-ci.org/vfile/to-vfile
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/vfile/to-vfile.svg
+[coverage-badge]: https://img.shields.io/codecov/c/github/vfile/to-vfile.svg
 
-[codecov]: https://codecov.io/github/vfile/to-vfile
+[coverage]: https://codecov.io/github/vfile/to-vfile
+
+[downloads-badge]: https://img.shields.io/npm/dm/to-vfile.svg
+
+[downloads]: https://www.npmjs.com/package/to-vfile
+
+[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+
+[chat]: https://spectrum.chat/unified/vfile
 
 [npm]: https://docs.npmjs.com/cli/install
 
