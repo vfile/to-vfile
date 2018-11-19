@@ -6,7 +6,6 @@ var test = require('tape')
 var buffer = require('is-buffer')
 var vfile = require('.')
 
-/* Start of with `readme.md`. */
 var fixture = fs.readFileSync('readme.md', 'utf8')
 
 test('toVFile()', function(t) {
