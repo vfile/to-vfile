@@ -6,17 +6,19 @@ var test = require('tape')
 var buffer = require('is-buffer')
 var vfile = require('.')
 
+var join = path.join
+
 var fixture = fs.readFileSync('readme.md', 'utf8')
 
 test('toVFile()', function(t) {
   t.test('should accept a string as `.path`', function(st) {
-    var file = vfile('foo/bar/baz.qux')
+    var file = vfile(join('foo', 'bar', 'baz.qux'))
 
-    st.equal(file.path, 'foo/bar/baz.qux')
+    st.equal(file.path, join('foo', 'bar', 'baz.qux'))
     st.equal(file.basename, 'baz.qux')
     st.equal(file.stem, 'baz')
     st.equal(file.extname, '.qux')
-    st.equal(file.dirname, 'foo/bar')
+    st.equal(file.dirname, join('foo', 'bar'))
     st.equal(file.contents, undefined)
     st.end()
   })
@@ -31,16 +33,16 @@ test('toVFile()', function(t) {
 
   t.test('should accept an object', function(st) {
     var file = vfile({
-      dirname: 'foo/bar',
+      dirname: join('foo', 'bar'),
       stem: 'baz',
       extname: '.qux'
     })
 
-    st.equal(file.path, 'foo/bar/baz.qux')
+    st.equal(file.path, join('foo', 'bar', 'baz.qux'))
     st.equal(file.basename, 'baz.qux')
     st.equal(file.stem, 'baz')
     st.equal(file.extname, '.qux')
-    st.equal(file.dirname, 'foo/bar')
+    st.equal(file.dirname, join('foo', 'bar'))
     st.equal(file.contents, undefined)
     st.end()
   })
@@ -201,7 +203,7 @@ test('toVFile.read', function(t) {
 
 test('toVFile.writeSync', function(t) {
   var filePath = 'fixture.txt'
-  var invalidFilePath = 'invalid/path/to/fixture.txt'
+  var invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
 
   t.test('should fail without path', function(st) {
     st.throws(function() {
@@ -251,7 +253,7 @@ test('toVFile.writeSync', function(t) {
 
 test('toVFile.write', function(t) {
   var filePath = 'fixture.txt'
-  var invalidFilePath = 'invalid/path/to/fixture.txt'
+  var invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
 
   t.test('should pass an error without path', function(st) {
     st.plan(1)
