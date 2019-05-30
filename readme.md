@@ -3,16 +3,19 @@
 [![Build][build-badge]][build]
 [![Coverage][coverage-badge]][coverage]
 [![Downloads][downloads-badge]][downloads]
+[![Sponsors][sponsors-badge]][collective]
+[![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-Create a [`vfile`][vfile] from a file-path.  Optionally populates them from
-the file-system as well.  Can write virtual files to file-system too.
+Create a [`vfile`][vfile] from a file-path.
+Optionally populates them from the file-system as well.
+Can write virtual files to file-system too.
 
-## Installation
+## Install
 
 [npm][]:
 
-```bash
+```sh
 npm install to-vfile
 ```
 
@@ -54,43 +57,49 @@ VFile {
 
 ### `toVFile(options)`
 
-Create a virtual file.  Works like the [vfile][] constructor,
-except when `options` is `string` or `Buffer`, in which case
-it’s treated as `{path: options}` instead of `{contents: options}`.
+Create a virtual file.
+Works like the [vfile][] constructor, except when `options` is `string` or
+`Buffer`, in which case it’s treated as `{path: options}` instead of
+`{contents: options}`.
 
 ### `toVFile.read(options[, encoding][, callback])`
 
-Creates a virtual file from options (`toVFile(options)`), reads the
-file from the file-system and populates `file.contents` with the result.
+Creates a virtual file from options (`toVFile(options)`), reads the file from
+the file-system and populates `file.contents` with the result.
 If `encoding` is specified, it’s passed to `fs.readFile`.
-If `callback` is given, invokes it with either an error or the populated
-virtual file.
-If `callback` is not given, returns a [`Promise`][promise] that is
-rejected with an error or resolved with the populated virtual file.
+If `callback` is given, invokes it with either an error or the populated virtual
+file.
+If `callback` is not given, returns a [`Promise`][promise] that is rejected with
+an error or resolved with the populated virtual file.
 
 ### `toVFile.readSync(options[, encoding])`
 
-Like `toVFile.read` but synchronous.  Either throws an error or
-returns a populated virtual file.
+Like `toVFile.read` but synchronous.  Either throws an error or returns a
+populated virtual file.
 
 ### `toVFile.write(options[, fsOptions][, callback])`
 
-Creates a virtual file from `options` (`toVFile(options)`), writes the
-file to the file-system.  `fsOptions` are passed to `fs.writeFile`.
+Creates a virtual file from `options` (`toVFile(options)`), writes the file to
+the file-system.
+`fsOptions` are passed to `fs.writeFile`.
 If `callback` is given, invokes it with an error, if any.
-If `callback` is not given, returns a [`Promise`][promise] that is
-rejected with an error or resolved without any value.
+If `callback` is not given, returns a [`Promise`][promise] that is rejected with
+an error or resolved without any value.
 
 ### `toVFile.writeSync(options[, fsOptions])`
 
-Like `toVFile.write` but synchronous.  Throws an error, if any.
+Like `toVFile.write` but synchronous.
+Throws an error, if any.
 
 ## Contribute
 
-See [`contributing.md` in `vfile/vfile`][contributing] for ways to get started.
+See [`contributing.md`][contributing] in [`vfile/.github`][health] for ways to
+get started.
+See [`support.md`][support] for ways to get help.
 
-This organisation has a [Code of Conduct][coc].  By interacting with this
-repository, organisation, or community you agree to abide by its terms.
+This project has a [Code of Conduct][coc].
+By interacting with this repository, organisation, or community you agree to
+abide by its terms.
 
 ## License
 
@@ -110,11 +119,25 @@ repository, organisation, or community you agree to abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/to-vfile
 
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[collective]: https://opencollective.com/unified
+
 [chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
 
 [chat]: https://spectrum.chat/unified/vfile
 
 [npm]: https://docs.npmjs.com/cli/install
+
+[contributing]: https://github.com/vfile/.github/blob/master/contributing.md
+
+[support]: https://github.com/vfile/.github/blob/master/support.md
+
+[health]: https://github.com/vfile/.github
+
+[coc]: https://github.com/vfile/.github/blob/master/code-of-conduct.md
 
 [license]: license
 
@@ -123,7 +146,3 @@ repository, organisation, or community you agree to abide by its terms.
 [vfile]: https://github.com/vfile/vfile
 
 [promise]: https://developer.mozilla.org/Web/JavaScript/Reference/Global_Objects/Promise
-
-[contributing]: https://github.com/vfile/vfile/blob/master/contributing.md
-
-[coc]: https://github.com/vfile/vfile/blob/master/code-of-conduct.md
