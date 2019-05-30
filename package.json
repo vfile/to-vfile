@@ -26,7 +26,7 @@
   ],
   "dependencies": {
     "is-buffer": "^2.0.0",
-    "vfile": "^3.0.0"
+    "vfile": "^4.0.0"
   },
   "devDependencies": {
     "browserify": "^16.0.0",
