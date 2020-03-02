@@ -1,15 +1,18 @@
 {
   "name": "to-vfile",
   "version": "6.0.0",
-  "description": "Create a vfile from a file-path",
+  "description": "vfile utility to create a vfile from from a filepath",
   "license": "MIT",
   "keywords": [
+    "vfile",
+    "vfile-util",
+    "util",
+    "utility",
     "virtual",
     "file",
     "text",
     "processing",
     "file-path",
-    "file",
     "path"
   ],
   "repository": "vfile/to-vfile",
