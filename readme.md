@@ -77,8 +77,8 @@ an error or resolved with the populated virtual file.
 
 ### `toVFile.readSync(options[, encoding])`
 
-Like `toVFile.read` but synchronous.  Either throws an error or returns a
-populated virtual file.
+Like `toVFile.read` but synchronous.
+Either throws an error or returns a populated virtual file.
 
 ### `toVFile.write(options[, fsOptions][, callback])`
 
@@ -87,12 +87,12 @@ the file-system.
 `fsOptions` are passed to `fs.writeFile`.
 If `callback` is given, invokes it with an error, if any.
 If `callback` is not given, returns a [`Promise`][promise] that is rejected with
-an error or resolved without any value.
+an error or resolved with the written virtual file.
 
 ### `toVFile.writeSync(options[, fsOptions])`
 
 Like `toVFile.write` but synchronous.
-Throws an error, if any.
+Either throws an error or returns a populated virtual file.
 
 ## Contribute
 

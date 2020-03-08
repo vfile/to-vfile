@@ -140,10 +140,10 @@ test('toVFile.read', function(t) {
 
     vfile
       .read('readme.md')
-      .then(function(file) {
-        st.equal(file.path, 'readme.md')
-        st.ok(buffer(file.contents))
-        st.equal(file.toString(), fixture)
+      .then(function(result) {
+        st.equal(result.path, 'readme.md')
+        st.ok(buffer(result.contents))
+        st.equal(result.toString(), fixture)
       })
       .catch(function() {
         st.fail('should resolve, not reject')
@@ -166,10 +166,10 @@ test('toVFile.read', function(t) {
 
     vfile
       .read('readme.md', 'utf8')
-      .then(function(file) {
-        st.equal(file.path, 'readme.md')
-        st.equal(typeof file.contents, 'string')
-        st.equal(file.toString(), fixture)
+      .then(function(result) {
+        st.equal(result.path, 'readme.md')
+        st.equal(typeof result.contents, 'string')
+        st.equal(result.toString(), fixture)
       })
       .catch(function() {
         st.fail('should resolve, not reject')
@@ -214,27 +214,30 @@ test('toVFile.writeSync', function(t) {
   })
 
   t.test('should work (buffer without encoding)', function(st) {
-    st.equal(
-      vfile.writeSync({path: filePath, contents: Buffer.from('föo')}),
-      undefined
-    )
+    var result = vfile.writeSync({path: filePath, contents: Buffer.from('föo')})
 
+    st.equal(result.path, filePath)
+    st.equal(String(result), 'föo')
     st.equal(fs.readFileSync(filePath, 'utf8'), 'föo')
 
     st.end()
   })
 
   t.test('should work (string)', function(st) {
-    st.equal(vfile.writeSync({path: filePath, contents: 'bär'}), undefined)
+    var result = vfile.writeSync({path: filePath, contents: 'bär'})
 
+    st.equal(result.path, filePath)
+    st.equal(String(result), 'bär')
     st.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
 
     st.end()
   })
 
   t.test('should work (null)', function(st) {
-    st.equal(vfile.writeSync(filePath), undefined)
+    var result = vfile.writeSync(filePath)
 
+    st.equal(result.path, filePath)
+    st.equal(String(result), '')
     st.equal(fs.readFileSync(filePath, 'utf8'), '')
 
     fs.unlinkSync(filePath)
@@ -270,7 +273,7 @@ test('toVFile.write', function(t) {
 
     vfile.write(file, function(error, result) {
       st.ifErr(error)
-      st.equal(result, undefined)
+      st.equal(result.path, filePath)
       st.equal(fs.readFileSync(filePath, 'utf8'), 'bäz')
     })
   })
@@ -282,7 +285,7 @@ test('toVFile.write', function(t) {
 
     vfile.write(file, function(error, result) {
       st.ifErr(error)
-      st.equal(result, undefined)
+      st.equal(result.path, filePath)
       st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx')
     })
   })
@@ -293,7 +296,7 @@ test('toVFile.write', function(t) {
     vfile
       .write({path: filePath, contents: 'qüx-promise'})
       .then(function(result) {
-        st.equal(result, undefined)
+        st.equal(result.path, filePath)
         st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx-promise')
       })
       .catch(function() {
@@ -308,19 +311,18 @@ test('toVFile.write', function(t) {
 
     vfile.write(file, 'hex', function(error, result) {
       st.ifErr(error)
-      st.equal(result, undefined)
+      st.equal(result.path, filePath)
       st.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
     })
   })
 
   t.test('should work in promise mode (string with encoding)', function(st) {
-    st.plan(3)
+    st.plan(2)
 
     vfile
       .write({path: filePath, contents: '62c3a4722d70726f6d697365'}, 'hex')
-      .then(function(error, result) {
-        st.ifErr(error)
-        st.equal(result, undefined)
+      .then(function(result) {
+        st.equal(result.path, filePath)
         st.equal(fs.readFileSync(filePath, 'utf8'), 'bär-promise')
       })
       .catch(function() {
@@ -337,7 +339,7 @@ test('toVFile.write', function(t) {
       fs.unlinkSync(filePath)
 
       st.ifErr(error)
-      st.equal(result, undefined)
+      st.equal(result.path, filePath)
       st.equal(doc, '')
     })
   })
@@ -352,7 +354,7 @@ test('toVFile.write', function(t) {
 
         fs.unlinkSync(filePath)
 
-        st.equal(result, undefined)
+        st.equal(result.path, filePath)
         st.equal(doc, '')
       })
       .catch(function() {
