@@ -135,22 +135,23 @@ test('toVFile.read', function (t) {
     })
   })
 
-  t.test('should work in promise mode (buffer without encoding)', function (
-    st
-  ) {
-    st.plan(3)
+  t.test(
+    'should work in promise mode (buffer without encoding)',
+    function (st) {
+      st.plan(3)
 
-    vfile
-      .read('readme.md')
-      .then(function (result) {
-        st.equal(result.path, 'readme.md')
-        st.ok(buffer(result.contents))
-        st.equal(result.toString(), fixture)
-      })
-      .catch(function () {
-        st.fail('should resolve, not reject')
-      })
-  })
+      vfile
+        .read('readme.md')
+        .then(function (result) {
+          st.equal(result.path, 'readme.md')
+          st.ok(buffer(result.contents))
+          st.equal(result.toString(), fixture)
+        })
+        .catch(function () {
+          st.fail('should resolve, not reject')
+        })
+    }
+  )
 
   t.test('should work (string with encoding)', function (st) {
     st.plan(4)
@@ -364,15 +365,16 @@ test('toVFile.write', function (t) {
       })
   })
 
-  t.test('should pass an error for files that cannot be written', function (
-    st
-  ) {
-    st.plan(1)
+  t.test(
+    'should pass an error for files that cannot be written',
+    function (st) {
+      st.plan(1)
 
-    vfile.write(invalidFilePath, function (error) {
-      st.ok(/ENOENT/.test(error.message))
-    })
-  })
+      vfile.write(invalidFilePath, function (error) {
+        st.ok(/ENOENT/.test(error.message))
+      })
+    }
+  )
 
   t.test(
     'should reject for files that cannot be written in promise mode',
