@@ -57,6 +57,7 @@ test('toVFile()', function (t) {
 test('toVFile.readSync', function (t) {
   t.test('should fail without path', function (st) {
     st.throws(function () {
+      // @ts-ignore runtime.
       toVFile.readSync()
     }, /path/i)
 
@@ -126,7 +127,7 @@ test('toVFile.read', function (t) {
     st.plan(1)
 
     toVFile.read(null, function (error) {
-      st.ok(/path/i.test(error))
+      st.ok(/path/i.test(String(error)))
     })
   })
 
@@ -203,7 +204,7 @@ test('toVFile.read', function (t) {
       .then(function () {
         st.fail('should reject, not resolve')
       })
-      .catch(function (error) {
+      .catch(function (/** @type {Error} */ error) {
         st.ok(error instanceof Error)
         st.ok(/ENOENT/.test(error.message))
       })
@@ -216,6 +217,7 @@ test('toVFile.writeSync', function (t) {
 
   t.test('should fail without path', function (st) {
     st.throws(function () {
+      // @ts-ignore runtime.
       toVFile.writeSync()
     }, /path/i)
 
@@ -271,7 +273,7 @@ test('toVFile.write', function (t) {
     st.plan(1)
 
     toVFile.write(null, function (error) {
-      st.ok(/path/i.test(error))
+      st.ok(/path/i.test(String(error)))
     })
   })
 
@@ -392,7 +394,7 @@ test('toVFile.write', function (t) {
         .then(function () {
           st.fail('should reject, not resolve')
         })
-        .catch(function (error) {
+        .catch(function (/** @type {Error} */ error) {
           st.ok(/ENOENT/.test(error.message))
         })
     }
