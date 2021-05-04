@@ -91,7 +91,7 @@ test('toVFile.readSync', function (t) {
 
   t.test('should honor file.cwd when file.path is relative', function (st) {
     var cwd = path.join(process.cwd(), 'lib')
-    var file = toVFile.readSync({path: 'core.js', cwd}, 'utf8')
+    var file = toVFile.readSync({path: 'index.js', cwd}, 'utf8')
 
     st.equal(typeof file.value, 'string')
 
@@ -101,7 +101,7 @@ test('toVFile.readSync', function (t) {
   t.test(
     'should honor file.cwd when file.path is relative, even with relative cwd',
     function (st) {
-      var file = toVFile.readSync({path: 'core.js', cwd: 'lib'}, 'utf8')
+      var file = toVFile.readSync({path: 'index.js', cwd: 'lib'}, 'utf8')
 
       st.equal(typeof file.value, 'string')
 

@@ -22,8 +22,6 @@ Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
 npm install to-vfile
 ```
 
-> **Note**: the file system stuff is not available in the browser.
-
 ## Use
 
 ```js

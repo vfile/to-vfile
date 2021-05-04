@@ -28,7 +28,6 @@
   "sideEffects": false,
   "type": "module",
   "main": "index.js",
-  "browser": "lib/core.js",
   "files": [
     "lib",
     "index.js"

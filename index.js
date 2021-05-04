@@ -1,1 +1,1 @@
-export {toVFile} from './lib/fs.js'
+export {toVFile} from './lib/index.js'
