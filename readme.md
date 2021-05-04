@@ -13,22 +13,25 @@ Can write virtual files to file system too.
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
 npm install to-vfile
 ```
 
-> **Note**: the file-system stuff is not available in the browser.
+> **Note**: the file system stuff is not available in the browser.
 
 ## Use
 
 ```js
-var vfile = require('to-vfile')
+import {toVFile} from 'to-vfile'
 
-console.log(vfile('readme.md'))
-console.log(vfile.readSync('.git/HEAD'))
-console.log(vfile.readSync('.git/HEAD', 'utf8'))
+console.log(toVFile('readme.md'))
+console.log(toVFile.readSync('.git/HEAD'))
+console.log(toVFile.readSync('.git/HEAD', 'utf8'))
 ```
 
 Yields:
@@ -45,30 +48,33 @@ VFile {
   messages: [],
   history: ['.git/HEAD'],
   cwd: '/Users/tilde/projects/oss/to-vfile',
-  contents: <Buffer 72 65 66 3a 20 72 65 66 73 2f 68 65 61 64 73 2f 6d 61 73 74 65 72 0a>
+  value: <Buffer 72 65 66 3a 20 72 65 66 73 2f 68 65 61 64 73 2f 6d 61 73 74 65 72 0a>
 }
 VFile {
   data: {},
   messages: [],
   history: ['.git/HEAD'],
   cwd: '/Users/tilde/projects/oss/to-vfile',
-  contents: 'ref: refs/heads/main\n'
+  value: 'ref: refs/heads/main\n'
 }
 ```
 
 ## API
+
+This package exports the following identifiers: `toVFile`.
+There is no default export.
 
 ### `toVFile(options)`
 
 Create a virtual file.
 Works like the [vfile][] constructor, except when `options` is `string` or
 `Buffer`, in which case it’s treated as `{path: options}` instead of
-`{contents: options}`.
+`{value: options}`.
 
 ### `toVFile.read(options[, encoding][, callback])`
 
 Creates a virtual file from options (`toVFile(options)`), reads the file from
-the file-system and populates `file.contents` with the result.
+the file system and populates `file.value` with the result.
 If `encoding` is specified, it’s passed to `fs.readFile`.
 If `callback` is given, invokes it with either an error or the populated virtual
 file.
@@ -83,7 +89,7 @@ Either throws an error or returns a populated virtual file.
 ### `toVFile.write(options[, fsOptions][, callback])`
 
 Creates a virtual file from `options` (`toVFile(options)`), writes the file to
-the file-system.
+the file system.
 `fsOptions` are passed to `fs.writeFile`.
 If `callback` is given, invokes it with an error, if any.
 If `callback` is not given, returns a [`Promise`][promise] that is rejected with

@@ -1,2 +1,1 @@
-'use strict'
-module.exports = require('./lib/fs')
+export {toVFile} from './lib/fs.js'
