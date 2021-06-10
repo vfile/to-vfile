@@ -27,14 +27,21 @@ npm install to-vfile
 ```js
 import {toVFile} from 'to-vfile'
 
+console.log(toVFile('readme.md'))
 console.log(toVFile(new URL('./readme.md', import.meta.url)))
-console.log(toVFile.readSync(new URL('./.git/HEAD', import.meta.url)))
-console.log(toVFile.readSync(new URL('./.git/HEAD', import.meta.url), 'utf8'))
+console.log(toVFile.readSync('.git/HEAD'))
+console.log(toVFile.readSync('.git/HEAD', 'utf8'))
 ```
 
 Yields:
 
 ```js
+VFile {
+  data: {},
+  messages: [],
+  history: ['readme.md'],
+  cwd: '/Users/tilde/projects/oss/to-vfile'
+}
 VFile {
   data: {},
   messages: [],
