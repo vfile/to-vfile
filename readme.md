@@ -27,9 +27,9 @@ npm install to-vfile
 ```js
 import {toVFile} from 'to-vfile'
 
-console.log(toVFile('readme.md'))
-console.log(toVFile.readSync('.git/HEAD'))
-console.log(toVFile.readSync('.git/HEAD', 'utf8'))
+console.log(toVFile(new URL('./readme.md', import.meta.url)))
+console.log(toVFile.readSync(new URL('./.git/HEAD', import.meta.url)))
+console.log(toVFile.readSync(new URL('./.git/HEAD', import.meta.url), 'utf8'))
 ```
 
 Yields:
@@ -67,7 +67,8 @@ There is no default export.
 Create a virtual file.
 Works like the [vfile][] constructor, except when `options` is `string` or
 `Buffer`, in which case it’s treated as `{path: options}` instead of
-`{value: options}`.
+`{value: options}`, or when `options` is a WHATWG `URL` object, in which case
+it’s treated as `{path: fileURLToPath(options)}`.
 
 ### `toVFile.read(options[, encoding][, callback])`
 

@@ -52,6 +52,18 @@ test('toVFile()', function (t) {
     st.equal(first, second)
     st.end()
   })
+
+  t.test('should accept a WHATWG URL object', function (st) {
+    var file = toVFile(new URL('file:///foo/bar/baz.qux'))
+
+    st.equal(file.path, join('/foo', 'bar', 'baz.qux'))
+    st.equal(file.basename, 'baz.qux')
+    st.equal(file.stem, 'baz')
+    st.equal(file.extname, '.qux')
+    st.equal(file.dirname, join('/foo', 'bar'))
+    st.equal(file.value, undefined)
+    st.end()
+  })
 })
 
 test('toVFile.readSync', function (t) {
