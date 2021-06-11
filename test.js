@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import {fileURLToPath, URL} from 'url'
 import test from 'tape'
 import buffer from 'is-buffer'
 import {toVFile} from './index.js'
@@ -50,6 +51,19 @@ test('toVFile()', function (t) {
     var second = toVFile(first)
 
     st.equal(first, second)
+    st.end()
+  })
+
+  t.test('should accept a WHATWG URL object', function (st) {
+    const dir = fileURLToPath(new URL('./', import.meta.url))
+    var file = toVFile(new URL('./baz.qux', import.meta.url))
+
+    st.equal(file.path, join(dir, 'baz.qux'))
+    st.equal(file.basename, 'baz.qux')
+    st.equal(file.stem, 'baz')
+    st.equal(file.extname, '.qux')
+    st.equal(file.dirname, dir.replace(/[/\\]$/, ''))
+    st.equal(file.value, undefined)
     st.end()
   })
 })
