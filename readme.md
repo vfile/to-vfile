@@ -25,12 +25,12 @@ npm install to-vfile
 ## Use
 
 ```js
-import {toVFile} from 'to-vfile'
+import {toVFile, readSync} from 'to-vfile'
 
 console.log(toVFile('readme.md'))
 console.log(toVFile(new URL('./readme.md', import.meta.url)))
-console.log(toVFile.readSync('.git/HEAD'))
-console.log(toVFile.readSync('.git/HEAD', 'utf8'))
+console.log(readSync('.git/HEAD'))
+console.log(readSync('.git/HEAD', 'utf8'))
 ```
 
 Yields:
@@ -66,7 +66,8 @@ VFile {
 
 ## API
 
-This package exports the following identifiers: `toVFile`.
+This package exports the following identifiers: `toVFile`, `read`, `readSync`,
+`write`, and `writeSync`.
 There is no default export.
 
 ### `toVFile(options)`
@@ -77,7 +78,7 @@ Works like the [vfile][] constructor, except when `options` is `string` or
 `{value: options}`, or when `options` is a WHATWG `URL` object, in which case
 it’s treated as `{path: fileURLToPath(options)}`.
 
-### `toVFile.read(options[, encoding][, callback])`
+### `read(options[, encoding][, callback])`
 
 Creates a virtual file from options (`toVFile(options)`), reads the file from
 the file system and populates `file.value` with the result.
@@ -87,12 +88,12 @@ file.
 If `callback` is not given, returns a [`Promise`][promise] that is rejected with
 an error or resolved with the populated virtual file.
 
-### `toVFile.readSync(options[, encoding])`
+### `readSync(options[, encoding])`
 
-Like `toVFile.read` but synchronous.
+Like `read` but synchronous.
 Either throws an error or returns a populated virtual file.
 
-### `toVFile.write(options[, fsOptions][, callback])`
+### `write(options[, fsOptions][, callback])`
 
 Creates a virtual file from `options` (`toVFile(options)`), writes the file to
 the file system.
@@ -101,9 +102,9 @@ If `callback` is given, invokes it with an error, if any.
 If `callback` is not given, returns a [`Promise`][promise] that is rejected with
 an error or resolved with the written virtual file.
 
-### `toVFile.writeSync(options[, fsOptions])`
+### `writeSync(options[, fsOptions])`
 
-Like `toVFile.write` but synchronous.
+Like `write` but synchronous.
 Either throws an error or returns a populated virtual file.
 
 ## Contribute
