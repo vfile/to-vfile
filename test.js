@@ -3,7 +3,7 @@ import path from 'path'
 import {fileURLToPath, URL} from 'url'
 import test from 'tape'
 import buffer from 'is-buffer'
-import {toVFile} from './index.js'
+import {toVFile, read, readSync, write, writeSync} from './index.js'
 
 var join = path.join
 
@@ -69,6 +69,8 @@ test('toVFile()', function (t) {
 })
 
 test('toVFile.readSync', function (t) {
+  t.equal(toVFile.readSync, readSync, 'should export as an identifier')
+
   t.test('should fail without path', function (st) {
     st.throws(function () {
       // @ts-ignore runtime.
@@ -137,6 +139,8 @@ test('toVFile.readSync', function (t) {
 })
 
 test('toVFile.read', function (t) {
+  t.equal(toVFile.read, read, 'should export as an identifier')
+
   t.test('should pass an error without path', function (st) {
     st.plan(1)
 
@@ -229,6 +233,8 @@ test('toVFile.writeSync', function (t) {
   var filePath = 'fixture.txt'
   var invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
 
+  t.equal(toVFile.writeSync, writeSync, 'should export as an identifier')
+
   t.test('should fail without path', function (st) {
     st.throws(function () {
       // @ts-ignore runtime.
@@ -282,6 +288,8 @@ test('toVFile.writeSync', function (t) {
 test('toVFile.write', function (t) {
   var filePath = 'fixture.txt'
   var invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
+
+  t.equal(toVFile.write, write, 'should export as an identifier')
 
   t.test('should pass an error without path', function (st) {
     st.plan(1)

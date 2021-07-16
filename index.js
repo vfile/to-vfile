@@ -7,4 +7,4 @@
  * @typedef {import('./lib/index.js').WriteOptions} WriteOptions
  */
 
-export {toVFile} from './lib/index.js'
+export {toVFile, read, readSync, write, writeSync} from './lib/index.js'
