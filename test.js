@@ -1,133 +1,135 @@
-import fs from 'fs'
-import path from 'path'
-import {fileURLToPath, URL} from 'url'
+import {Buffer} from 'node:buffer'
+import fs from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
+import {fileURLToPath, URL} from 'node:url'
 import test from 'tape'
 import buffer from 'is-buffer'
 import {toVFile, read, readSync, write, writeSync} from './index.js'
 
-var join = path.join
+const join = path.join
 
-var fixture = fs.readFileSync('readme.md', 'utf8')
+const fixture = fs.readFileSync('readme.md', 'utf8')
 
-test('toVFile()', function (t) {
-  t.test('should accept a string as `.path`', function (st) {
-    var file = toVFile(join('foo', 'bar', 'baz.qux'))
+test('toVFile()', (t) => {
+  t.test('should accept a string as `.path`', (t) => {
+    const file = toVFile(join('foo', 'bar', 'baz.qux'))
 
-    st.equal(file.path, join('foo', 'bar', 'baz.qux'))
-    st.equal(file.basename, 'baz.qux')
-    st.equal(file.stem, 'baz')
-    st.equal(file.extname, '.qux')
-    st.equal(file.dirname, join('foo', 'bar'))
-    st.equal(file.value, undefined)
-    st.end()
+    t.equal(file.path, join('foo', 'bar', 'baz.qux'))
+    t.equal(file.basename, 'baz.qux')
+    t.equal(file.stem, 'baz')
+    t.equal(file.extname, '.qux')
+    t.equal(file.dirname, join('foo', 'bar'))
+    t.equal(file.value, undefined)
+    t.end()
   })
 
-  t.test('should accept a buffer as `.path`', function (st) {
-    var file = toVFile(Buffer.from('readme.md'))
+  t.test('should accept a buffer as `.path`', (t) => {
+    const file = toVFile(Buffer.from('readme.md'))
 
-    st.equal(file.path, 'readme.md')
-    st.equal(file.value, undefined)
-    st.end()
+    t.equal(file.path, 'readme.md')
+    t.equal(file.value, undefined)
+    t.end()
   })
 
-  t.test('should accept an object', function (st) {
-    var file = toVFile({
+  t.test('should accept an object', (t) => {
+    const file = toVFile({
       dirname: join('foo', 'bar'),
       stem: 'baz',
       extname: '.qux'
     })
 
-    st.equal(file.path, join('foo', 'bar', 'baz.qux'))
-    st.equal(file.basename, 'baz.qux')
-    st.equal(file.stem, 'baz')
-    st.equal(file.extname, '.qux')
-    st.equal(file.dirname, join('foo', 'bar'))
-    st.equal(file.value, undefined)
-    st.end()
+    t.equal(file.path, join('foo', 'bar', 'baz.qux'))
+    t.equal(file.basename, 'baz.qux')
+    t.equal(file.stem, 'baz')
+    t.equal(file.extname, '.qux')
+    t.equal(file.dirname, join('foo', 'bar'))
+    t.equal(file.value, undefined)
+    t.end()
   })
 
-  t.test('should accept a vfile', function (st) {
-    var first = toVFile()
-    var second = toVFile(first)
+  t.test('should accept a vfile', (t) => {
+    const first = toVFile()
+    const second = toVFile(first)
 
-    st.equal(first, second)
-    st.end()
+    t.equal(first, second)
+    t.end()
   })
 
-  t.test('should accept a WHATWG URL object', function (st) {
+  t.test('should accept a WHATWG URL object', (t) => {
     const dir = fileURLToPath(new URL('./', import.meta.url))
-    var file = toVFile(new URL('./baz.qux', import.meta.url))
+    const file = toVFile(new URL('./baz.qux', import.meta.url))
 
-    st.equal(file.path, join(dir, 'baz.qux'))
-    st.equal(file.basename, 'baz.qux')
-    st.equal(file.stem, 'baz')
-    st.equal(file.extname, '.qux')
-    st.equal(file.dirname, dir.replace(/[/\\]$/, ''))
-    st.equal(file.value, undefined)
-    st.end()
+    t.equal(file.path, join(dir, 'baz.qux'))
+    t.equal(file.basename, 'baz.qux')
+    t.equal(file.stem, 'baz')
+    t.equal(file.extname, '.qux')
+    t.equal(file.dirname, dir.replace(/[/\\]$/, ''))
+    t.equal(file.value, undefined)
+    t.end()
   })
 })
 
-test('toVFile.readSync', function (t) {
+test('toVFile.readSync', (t) => {
   t.equal(toVFile.readSync, readSync, 'should export as an identifier')
 
-  t.test('should fail without path', function (st) {
-    st.throws(function () {
+  t.test('should fail without path', (t) => {
+    t.throws(() => {
       // @ts-ignore runtime.
       toVFile.readSync()
     }, /path/i)
 
-    st.end()
+    t.end()
   })
 
-  t.test('should work (buffer without encoding)', function (st) {
-    var file = toVFile.readSync('readme.md')
+  t.test('should work (buffer without encoding)', (t) => {
+    const file = toVFile.readSync('readme.md')
 
-    st.equal(file.path, 'readme.md')
-    st.ok(buffer(file.value))
-    st.equal(file.toString(), fixture)
-    st.end()
+    t.equal(file.path, 'readme.md')
+    t.ok(buffer(file.value))
+    t.equal(file.toString(), fixture)
+    t.end()
   })
 
-  t.test('should work (string with encoding)', function (st) {
-    var file = toVFile.readSync('readme.md', 'utf8')
+  t.test('should work (string with encoding)', (t) => {
+    const file = toVFile.readSync('readme.md', 'utf8')
 
-    st.equal(file.path, 'readme.md')
-    st.equal(typeof file.value, 'string')
-    st.equal(file.toString(), fixture)
-    st.end()
+    t.equal(file.path, 'readme.md')
+    t.equal(typeof file.value, 'string')
+    t.equal(file.toString(), fixture)
+    t.end()
   })
 
   t.throws(
-    function () {
+    () => {
       toVFile.readSync('missing.md')
     },
     /ENOENT/,
     'should throw on non-existing files'
   )
 
-  t.test('should honor file.cwd when file.path is relative', function (st) {
-    var cwd = path.join(process.cwd(), 'lib')
-    var file = toVFile.readSync({path: 'index.js', cwd}, 'utf8')
+  t.test('should honor file.cwd when file.path is relative', (t) => {
+    const cwd = path.join(process.cwd(), 'lib')
+    const file = toVFile.readSync({path: 'index.js', cwd}, 'utf8')
 
-    st.equal(typeof file.value, 'string')
+    t.equal(typeof file.value, 'string')
 
-    st.end()
+    t.end()
   })
 
   t.test(
     'should honor file.cwd when file.path is relative, even with relative cwd',
-    function (st) {
-      var file = toVFile.readSync({path: 'index.js', cwd: 'lib'}, 'utf8')
+    (t) => {
+      const file = toVFile.readSync({path: 'index.js', cwd: 'lib'}, 'utf8')
 
-      st.equal(typeof file.value, 'string')
+      t.equal(typeof file.value, 'string')
 
-      st.end()
+      t.end()
     }
   )
 
   t.throws(
-    function () {
+    () => {
       toVFile.readSync({
         path: path.join(process.cwd(), 'core.js'),
         cwd: path.join(process.cwd(), 'lib')
@@ -138,146 +140,146 @@ test('toVFile.readSync', function (t) {
   )
 })
 
-test('toVFile.read', function (t) {
+test('toVFile.read', (t) => {
   t.equal(toVFile.read, read, 'should export as an identifier')
 
-  t.test('should pass an error without path', function (st) {
-    st.plan(1)
+  t.test('should pass an error without path', (t) => {
+    t.plan(1)
 
-    toVFile.read(null, function (error) {
-      st.ok(/path/i.test(String(error)))
+    toVFile.read(null, (error) => {
+      t.ok(/path/i.test(String(error)))
     })
   })
 
-  t.test('should work (buffer without encoding)', function (st) {
-    st.plan(4)
+  t.test('should work (buffer without encoding)', (t) => {
+    t.plan(4)
 
-    toVFile.read('readme.md', function (error, file) {
-      st.ifErr(error)
-      st.equal(file.path, 'readme.md')
-      st.ok(buffer(file.value))
-      st.equal(file.toString(), fixture)
+    toVFile.read('readme.md', (error, file) => {
+      t.ifErr(error)
+      t.equal(file.path, 'readme.md')
+      t.ok(buffer(file.value))
+      t.equal(file.toString(), fixture)
     })
   })
 
-  t.test(
-    'should work in promise mode (buffer without encoding)',
-    function (st) {
-      st.plan(3)
+  t.test('should work in promise mode (buffer without encoding)', (t) => {
+    t.plan(3)
 
-      toVFile
-        .read('readme.md')
-        .then(function (result) {
-          st.equal(result.path, 'readme.md')
-          st.ok(buffer(result.value))
-          st.equal(result.toString(), fixture)
-        })
-        .catch(function () {
-          st.fail('should resolve, not reject')
-        })
-    }
-  )
+    toVFile
+      .read('readme.md')
+      .then((result) => {
+        t.equal(result.path, 'readme.md')
+        t.ok(buffer(result.value))
+        t.equal(result.toString(), fixture)
+      })
+      .catch(() => {
+        t.fail('should resolve, not reject')
+      })
+  })
 
-  t.test('should work (string with encoding)', function (st) {
-    st.plan(4)
+  t.test('should work (string with encoding)', (t) => {
+    t.plan(4)
 
-    toVFile.read('readme.md', 'utf8', function (error, file) {
-      st.ifErr(error)
-      st.equal(file.path, 'readme.md')
-      st.equal(typeof file.value, 'string')
-      st.equal(file.toString(), fixture)
+    toVFile.read('readme.md', 'utf8', (error, file) => {
+      t.ifErr(error)
+      t.equal(file.path, 'readme.md')
+      t.equal(typeof file.value, 'string')
+      t.equal(file.toString(), fixture)
     })
   })
 
-  t.test('should work in promise mode (string with encoding)', function (st) {
-    st.plan(3)
+  t.test('should work in promise mode (string with encoding)', (t) => {
+    t.plan(3)
 
     toVFile
       .read('readme.md', 'utf8')
-      .then(function (result) {
-        st.equal(result.path, 'readme.md')
-        st.equal(typeof result.value, 'string')
-        st.equal(result.toString(), fixture)
+      .then((result) => {
+        t.equal(result.path, 'readme.md')
+        t.equal(typeof result.value, 'string')
+        t.equal(result.toString(), fixture)
       })
-      .catch(function () {
-        st.fail('should resolve, not reject')
+      .catch(() => {
+        t.fail('should resolve, not reject')
       })
   })
 
-  t.test('should return an error on non-existing files', function (st) {
-    st.plan(3)
+  t.test('should return an error on non-existing files', (t) => {
+    t.plan(3)
 
-    toVFile.read('missing.md', 'utf8', function (error, file) {
-      st.equal(file, undefined)
-      st.ok(error instanceof Error)
-      st.ok(/ENOENT/.test(error.message))
+    toVFile.read('missing.md', 'utf8', (error, file) => {
+      t.equal(file, undefined)
+      t.ok(error instanceof Error)
+      t.ok(/ENOENT/.test(error.message))
     })
   })
 
-  t.test('should reject on non-existing files in promise mode', function (st) {
-    st.plan(2)
+  t.test('should reject on non-existing files in promise mode', (t) => {
+    t.plan(2)
 
     toVFile
       .read('missing.md')
-      .then(function () {
-        st.fail('should reject, not resolve')
+      .then(() => {
+        t.fail('should reject, not resolve')
       })
-      .catch(function (/** @type {Error} */ error) {
-        st.ok(error instanceof Error)
-        st.ok(/ENOENT/.test(error.message))
+      .catch((/** @type {Error} */ error) => {
+        t.ok(error instanceof Error)
+        t.ok(/ENOENT/.test(error.message))
       })
   })
 })
 
-test('toVFile.writeSync', function (t) {
-  var filePath = 'fixture.txt'
-  var invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
+test('toVFile.writeSync', (t) => {
+  const filePath = 'fixture.txt'
+  const invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
 
   t.equal(toVFile.writeSync, writeSync, 'should export as an identifier')
 
-  t.test('should fail without path', function (st) {
-    st.throws(function () {
+  t.test('should fail without path', (t) => {
+    t.throws(() => {
       // @ts-ignore runtime.
       toVFile.writeSync()
     }, /path/i)
 
-    st.end()
+    t.end()
   })
 
-  t.test('should work (buffer without encoding)', function (st) {
-    var result = toVFile.writeSync({path: filePath, value: Buffer.from('föo')})
+  t.test('should work (buffer without encoding)', (t) => {
+    const result = toVFile.writeSync({
+      path: filePath,
+      value: Buffer.from('föo')
+    })
 
-    st.equal(result.path, filePath)
-    st.equal(String(result), 'föo')
-    st.equal(fs.readFileSync(filePath, 'utf8'), 'föo')
+    t.equal(result.path, filePath)
+    t.equal(String(result), 'föo')
+    t.equal(fs.readFileSync(filePath, 'utf8'), 'föo')
 
-    st.end()
+    t.end()
   })
 
-  t.test('should work (string)', function (st) {
-    var result = toVFile.writeSync({path: filePath, value: 'bär'})
+  t.test('should work (string)', (t) => {
+    const result = toVFile.writeSync({path: filePath, value: 'bär'})
 
-    st.equal(result.path, filePath)
-    st.equal(String(result), 'bär')
-    st.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
+    t.equal(result.path, filePath)
+    t.equal(String(result), 'bär')
+    t.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
 
-    st.end()
+    t.end()
   })
 
-  t.test('should work (null)', function (st) {
-    var result = toVFile.writeSync(filePath)
+  t.test('should work (null)', (t) => {
+    const result = toVFile.writeSync(filePath)
 
-    st.equal(result.path, filePath)
-    st.equal(String(result), '')
-    st.equal(fs.readFileSync(filePath, 'utf8'), '')
+    t.equal(result.path, filePath)
+    t.equal(String(result), '')
+    t.equal(fs.readFileSync(filePath, 'utf8'), '')
 
     fs.unlinkSync(filePath)
 
-    st.end()
+    t.end()
   })
 
   t.throws(
-    function () {
+    () => {
       toVFile.writeSync(invalidFilePath)
     },
     /ENOENT/,
@@ -285,139 +287,136 @@ test('toVFile.writeSync', function (t) {
   )
 })
 
-test('toVFile.write', function (t) {
-  var filePath = 'fixture.txt'
-  var invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
+test('toVFile.write', (t) => {
+  const filePath = 'fixture.txt'
+  const invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
 
   t.equal(toVFile.write, write, 'should export as an identifier')
 
-  t.test('should pass an error without path', function (st) {
-    st.plan(1)
+  t.test('should pass an error without path', (t) => {
+    t.plan(1)
 
-    toVFile.write(null, function (error) {
-      st.ok(/path/i.test(String(error)))
+    toVFile.write(null, (error) => {
+      t.ok(/path/i.test(String(error)))
     })
   })
 
-  t.test('should work (buffer without encoding)', function (st) {
-    var file = {path: filePath, value: Buffer.from('bäz')}
+  t.test('should work (buffer without encoding)', (t) => {
+    const file = {path: filePath, value: Buffer.from('bäz')}
 
-    st.plan(3)
+    t.plan(3)
 
-    toVFile.write(file, function (error, result) {
-      st.ifErr(error)
-      st.equal(result.path, filePath)
-      st.equal(fs.readFileSync(filePath, 'utf8'), 'bäz')
+    toVFile.write(file, (error, result) => {
+      t.ifErr(error)
+      t.equal(result.path, filePath)
+      t.equal(fs.readFileSync(filePath, 'utf8'), 'bäz')
     })
   })
 
-  t.test('should work (string)', function (st) {
-    var file = {path: filePath, value: 'qüx'}
+  t.test('should work (string)', (t) => {
+    const file = {path: filePath, value: 'qüx'}
 
-    st.plan(3)
+    t.plan(3)
 
-    toVFile.write(file, function (error, result) {
-      st.ifErr(error)
-      st.equal(result.path, filePath)
-      st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx')
+    toVFile.write(file, (error, result) => {
+      t.ifErr(error)
+      t.equal(result.path, filePath)
+      t.equal(fs.readFileSync(filePath, 'utf8'), 'qüx')
     })
   })
 
-  t.test('should work in promise mode (string)', function (st) {
-    st.plan(2)
+  t.test('should work in promise mode (string)', (t) => {
+    t.plan(2)
 
     toVFile
       .write({path: filePath, value: 'qüx-promise'})
-      .then(function (result) {
-        st.equal(result.path, filePath)
-        st.equal(fs.readFileSync(filePath, 'utf8'), 'qüx-promise')
+      .then((result) => {
+        t.equal(result.path, filePath)
+        t.equal(fs.readFileSync(filePath, 'utf8'), 'qüx-promise')
       })
-      .catch(function () {
-        st.fail('should resolve, not reject')
+      .catch(() => {
+        t.fail('should resolve, not reject')
       })
   })
 
-  t.test('should work (string with encoding)', function (st) {
-    var file = {path: filePath, value: '62c3a472'}
+  t.test('should work (string with encoding)', (t) => {
+    const file = {path: filePath, value: '62c3a472'}
 
-    st.plan(3)
+    t.plan(3)
 
-    toVFile.write(file, 'hex', function (error, result) {
-      st.ifErr(error)
-      st.equal(result.path, filePath)
-      st.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
+    toVFile.write(file, 'hex', (error, result) => {
+      t.ifErr(error)
+      t.equal(result.path, filePath)
+      t.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
     })
   })
 
-  t.test('should work in promise mode (string with encoding)', function (st) {
-    st.plan(2)
+  t.test('should work in promise mode (string with encoding)', (t) => {
+    t.plan(2)
 
     toVFile
       .write({path: filePath, value: '62c3a4722d70726f6d697365'}, 'hex')
-      .then(function (result) {
-        st.equal(result.path, filePath)
-        st.equal(fs.readFileSync(filePath, 'utf8'), 'bär-promise')
+      .then((result) => {
+        t.equal(result.path, filePath)
+        t.equal(fs.readFileSync(filePath, 'utf8'), 'bär-promise')
       })
-      .catch(function () {
-        st.fail('should resolve, not reject')
+      .catch(() => {
+        t.fail('should resolve, not reject')
       })
   })
 
-  t.test('should work (null)', function (st) {
-    st.plan(3)
+  t.test('should work (null)', (t) => {
+    t.plan(3)
 
-    toVFile.write(filePath, function (error, result) {
-      var doc = fs.readFileSync(filePath, 'utf8')
+    toVFile.write(filePath, (error, result) => {
+      const doc = fs.readFileSync(filePath, 'utf8')
 
       fs.unlinkSync(filePath)
 
-      st.ifErr(error)
-      st.equal(result.path, filePath)
-      st.equal(doc, '')
+      t.ifErr(error)
+      t.equal(result.path, filePath)
+      t.equal(doc, '')
     })
   })
 
-  t.test('should work in promise mode (null)', function (st) {
-    st.plan(2)
+  t.test('should work in promise mode (null)', (t) => {
+    t.plan(2)
 
     toVFile
       .write(filePath)
-      .then(function (result) {
-        var doc = fs.readFileSync(filePath, 'utf8')
+      .then((result) => {
+        const doc = fs.readFileSync(filePath, 'utf8')
 
         fs.unlinkSync(filePath)
 
-        st.equal(result.path, filePath)
-        st.equal(doc, '')
+        t.equal(result.path, filePath)
+        t.equal(doc, '')
       })
-      .catch(function () {
-        st.fail('should resolve, not reject')
+      .catch(() => {
+        t.fail('should resolve, not reject')
       })
   })
 
-  t.test(
-    'should pass an error for files that cannot be written',
-    function (st) {
-      st.plan(1)
+  t.test('should pass an error for files that cannot be written', (t) => {
+    t.plan(1)
 
-      toVFile.write(invalidFilePath, function (error) {
-        st.ok(/ENOENT/.test(error.message))
-      })
-    }
-  )
+    toVFile.write(invalidFilePath, (error) => {
+      t.ok(/ENOENT/.test(error.message))
+    })
+  })
 
   t.test(
     'should reject for files that cannot be written in promise mode',
-    function (st) {
-      st.plan(1)
+    (t) => {
+      t.plan(1)
 
       toVFile
         .write(invalidFilePath)
-        .then(function () {
-          st.fail('should reject, not resolve')
+        .then(() => {
+          t.fail('should reject, not resolve')
         })
-        .catch(function (/** @type {Error} */ error) {
-          st.ok(/ENOENT/.test(error.message))
+        .catch((/** @type {Error} */ error) => {
+          t.ok(/ENOENT/.test(error.message))
         })
     }
   )
