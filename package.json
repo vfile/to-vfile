@@ -1,6 +1,6 @@
 {
   "name": "to-vfile",
-  "version": "7.2.1",
+  "version": "7.2.2",
   "description": "vfile utility to create a vfile from a filepath",
   "license": "MIT",
   "keywords": [
