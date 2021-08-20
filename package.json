@@ -36,7 +36,7 @@
   ],
   "dependencies": {
     "is-buffer": "^2.0.0",
-    "vfile": "^5.0.0"
+    "vfile": "^5.1.0"
   },
   "devDependencies": {
     "@types/tape": "^4.0.0",
