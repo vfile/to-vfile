@@ -58,7 +58,7 @@ test('toVFile()', (t) => {
 
   t.test('should accept a WHATWG URL object', (t) => {
     const dir = fileURLToPath(new URL('./', import.meta.url))
-    const file = toVFile(new URL('./baz.qux', import.meta.url))
+    const file = toVFile(new URL('baz.qux', import.meta.url))
 
     t.equal(file.path, join(dir, 'baz.qux'))
     t.equal(file.basename, 'baz.qux')
