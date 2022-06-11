@@ -7,30 +7,68 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-Create a [`vfile`][vfile] from a filepath.
-Optionally populates them from the file system as well.
-Can write virtual files to file system too.
+[vfile][] utility to read and write to the file system.
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`toVFile(options)`](#tovfileoptions)
+    *   [`read(options[, encoding][, callback])`](#readoptions-encoding-callback)
+    *   [`readSync(options[, encoding])`](#readsyncoptions-encoding)
+    *   [`write(options[, fsOptions][, callback])`](#writeoptions-fsoptions-callback)
+    *   [`writeSync(options[, fsOptions])`](#writesyncoptions-fsoptions)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This utility places file paths and the file system first.
+Where `vfile` itself focusses on file values (the file contents), this instead
+focuses on the file system, which is a common case when working with files.
+
+## When should I use this?
+
+Use this if you know there’s a file system and want to use it.
+Use `vfile` if there might not be a file system.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
 
 ```sh
 npm install to-vfile
 ```
 
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import {toVFile, read, readSync, write, writeSync} from 'https://esm.sh/to-vfile@7'
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import {toVFile, read, readSync, write, writeSync} from 'https://esm.sh/to-vfile@7?bundle'
+</script>
+```
+
 ## Use
 
 ```js
-import {toVFile, readSync} from 'to-vfile'
+import {toVFile, read} from 'to-vfile'
 
 console.log(toVFile('readme.md'))
-console.log(toVFile(new URL('./readme.md', import.meta.url)))
-console.log(readSync('.git/HEAD'))
-console.log(readSync('.git/HEAD', 'utf8'))
+console.log(toVFile(new URL('readme.md', import.meta.url)))
+console.log(await read('.git/HEAD'))
+console.log(await read('.git/HEAD', 'utf8'))
 ```
 
 Yields:
@@ -39,54 +77,54 @@ Yields:
 VFile {
   data: {},
   messages: [],
-  history: ['readme.md'],
-  cwd: '/Users/tilde/projects/oss/to-vfile'
+  history: [ 'readme.md' ],
+  cwd: '/Users/tilde/Projects/oss/to-vfile'
 }
 VFile {
   data: {},
   messages: [],
-  history: ['readme.md'],
-  cwd: '/Users/tilde/projects/oss/to-vfile'
+  history: [ '/Users/tilde/Projects/oss/to-vfile/readme.md' ],
+  cwd: '/Users/tilde/Projects/oss/to-vfile'
 }
 VFile {
   data: {},
   messages: [],
-  history: ['.git/HEAD'],
-  cwd: '/Users/tilde/projects/oss/to-vfile',
-  value: <Buffer 72 65 66 3a 20 72 65 66 73 2f 68 65 61 64 73 2f 6d 61 73 74 65 72 0a>
+  history: [ '.git/HEAD' ],
+  cwd: '/Users/tilde/Projects/oss/to-vfile',
+  value: <Buffer 72 65 66 3a 20 72 65 66 73 2f 68 65 61 64 73 2f 6d 61 69 6e 0a>
 }
 VFile {
   data: {},
   messages: [],
-  history: ['.git/HEAD'],
-  cwd: '/Users/tilde/projects/oss/to-vfile',
+  history: [ '.git/HEAD' ],
+  cwd: '/Users/tilde/Projects/oss/to-vfile',
   value: 'ref: refs/heads/main\n'
 }
 ```
 
 ## API
 
-This package exports the following identifiers: `toVFile`, `read`, `readSync`,
-`write`, and `writeSync`.
+This package exports the identifiers `toVFile`, `read`, `readSync`, `write`,
+and `writeSync`.
 There is no default export.
 
 ### `toVFile(options)`
 
 Create a virtual file.
-Works like the [vfile][] constructor, except when `options` is `string` or
-`Buffer`, in which case it’s treated as `{path: options}` instead of
-`{value: options}`, or when `options` is a WHATWG `URL` object, in which case
-it’s treated as `{path: fileURLToPath(options)}`.
+Works like the [`VFile`][vfile] constructor, except when `options` is `string`
+or `Buffer`, in which case it’s treated as `{path: options}` instead of
+`{value: options}`, or when `options` is a `URL` object, in which case it’s
+treated as `{path: fileURLToPath(options)}`.
 
 ### `read(options[, encoding][, callback])`
 
 Creates a virtual file from options (`toVFile(options)`), reads the file from
 the file system and populates `file.value` with the result.
 If `encoding` is specified, it’s passed to `fs.readFile`.
-If `callback` is given, invokes it with either an error or the populated virtual
+If `callback` is given, calls it with either an error or the populated virtual
 file.
-If `callback` is not given, returns a [`Promise`][promise] that is rejected with
-an error or resolved with the populated virtual file.
+If `callback` is not given, returns a [`Promise`][promise] that is rejected
+with an error or resolved with the populated virtual file.
 
 ### `readSync(options[, encoding])`
 
@@ -98,14 +136,27 @@ Either throws an error or returns a populated virtual file.
 Creates a virtual file from `options` (`toVFile(options)`), writes the file to
 the file system.
 `fsOptions` are passed to `fs.writeFile`.
-If `callback` is given, invokes it with an error, if any.
-If `callback` is not given, returns a [`Promise`][promise] that is rejected with
-an error or resolved with the written virtual file.
+If `callback` is given, calls it with an error, if any.
+If `callback` is not given, returns a [`Promise`][promise] that is rejected
+with an error or resolved with the written virtual file.
 
 ### `writeSync(options[, fsOptions])`
 
 Like `write` but synchronous.
 Either throws an error or returns a populated virtual file.
+
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional types `Compatible`, `Callback`, `BufferEncoding`,
+`Mode`, `ReadOptions`, and `WriteOptions`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Contribute
 
@@ -147,13 +198,19 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
-[contributing]: https://github.com/vfile/.github/blob/HEAD/contributing.md
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 
-[support]: https://github.com/vfile/.github/blob/HEAD/support.md
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
+[contributing]: https://github.com/vfile/.github/blob/main/contributing.md
+
+[support]: https://github.com/vfile/.github/blob/main/support.md
 
 [health]: https://github.com/vfile/.github
 
-[coc]: https://github.com/vfile/.github/blob/HEAD/code-of-conduct.md
+[coc]: https://github.com/vfile/.github/blob/main/code-of-conduct.md
 
 [license]: license
 
