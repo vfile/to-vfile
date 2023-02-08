@@ -16,11 +16,16 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`toVFile(options)`](#tovfileoptions)
-    *   [`read(options[, encoding][, callback])`](#readoptions-encoding-callback)
-    *   [`readSync(options[, encoding])`](#readsyncoptions-encoding)
-    *   [`write(options[, fsOptions][, callback])`](#writeoptions-fsoptions-callback)
-    *   [`writeSync(options[, fsOptions])`](#writesyncoptions-fsoptions)
+    *   [`toVFile(description)`](#tovfiledescription)
+    *   [`read(description[, options][, callback])`](#readdescription-options-callback)
+    *   [`readSync(description[, options])`](#readsyncdescription-options)
+    *   [`write(description[, options][, callback])`](#writedescription-options-callback)
+    *   [`writeSync(description[, options])`](#writesyncdescription-options)
+    *   [`BufferEncoding`](#bufferencoding)
+    *   [`Callback`](#callback)
+    *   [`Compatible`](#compatible)
+    *   [`ReadOptions`](#readoptions)
+    *   [`WriteOptions`](#writeoptions)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Contribute](#contribute)
@@ -40,7 +45,7 @@ Use `vfile` if there might not be a file system.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install to-vfile
@@ -104,58 +109,197 @@ VFile {
 
 ## API
 
-This package exports the identifiers `toVFile`, `read`, `readSync`, `write`,
-and `writeSync`.
+This package exports the identifiers [`read`][api-read],
+[`readSync`][api-read-sync], [`toVFile`][api-to-vfile],
+[`write`][api-write], and [`writeSync`][api-write-sync].
 There is no default export.
 
-### `toVFile(options)`
+### `toVFile(description)`
 
-Create a virtual file.
-Works like the [`VFile`][vfile] constructor, except when `options` is `string`
-or `Buffer`, in which case it’s treated as `{path: options}` instead of
-`{value: options}`, or when `options` is a `URL` object, in which case it’s
-treated as `{path: fileURLToPath(options)}`.
+Create a virtual file from a description.
 
-### `read(options[, encoding][, callback])`
+This is like `VFile`, but it accepts a file path instead of file cotnents.
 
-Creates a virtual file from options (`toVFile(options)`), reads the file from
-the file system and populates `file.value` with the result.
-If `encoding` is specified, it’s passed to `fs.readFile`.
-If `callback` is given, calls it with either an error or the populated virtual
-file.
-If `callback` is not given, returns a [`Promise`][promise] that is rejected
-with an error or resolved with the populated virtual file.
+If `options` is a string, URL, or buffer, it’s used as the path.
+Otherwise, if it’s a file, that’s returned instead.
+Otherwise, the options are passed through to `new VFile()`.
 
-### `readSync(options[, encoding])`
+###### Parameters
 
-Like `read` but synchronous.
-Either throws an error or returns a populated virtual file.
+*   `description` ([`Compatible`][api-compatible], optional)
+    — fath to file, file options, or file itself
 
-### `write(options[, fsOptions][, callback])`
+###### Returns
 
-Creates a virtual file from `options` (`toVFile(options)`), writes the file to
-the file system.
-`fsOptions` are passed to `fs.writeFile`.
-If `callback` is given, calls it with an error, if any.
-If `callback` is not given, returns a [`Promise`][promise] that is rejected
-with an error or resolved with the written virtual file.
+Given file or new file ([`VFile`][vfile]).
 
-### `writeSync(options[, fsOptions])`
+### `read(description[, options][, callback])`
 
-Like `write` but synchronous.
-Either throws an error or returns a populated virtual file.
+Create a virtual file and read it in, async.
+
+###### Signatures
+
+*   `(description[, options], Callback): void`
+*   `(description[, options]): Promise<VFile>`
+
+###### Parameters
+
+*   `description` ([`Compatible`][api-compatible])
+    — path to file, file options, or file itself
+*   `options` ([`BufferEncoding`][api-buffer-encoding],
+    [`ReadOptions`][api-read-options], optional)
+*   `callback` ([`Callback`][api-callback], optional)
+    — callback called when done
+
+###### Returns
+
+Nothing when a callback is given, otherwise [promise][] that resolves to given
+file or new file ([`VFile`][vfile]).
+
+### `readSync(description[, options])`
+
+Create a virtual file and read it in, synchronously.
+
+###### Parameters
+
+*   `description` ([`Compatible`][api-compatible])
+    — path to file, file options, or file itself
+*   `options` ([`BufferEncoding`][api-buffer-encoding],
+    [`ReadOptions`][api-read-options], optional)
+
+###### Returns
+
+Given file or new file ([`VFile`][vfile]).
+
+### `write(description[, options][, callback])`
+
+Create a virtual file and write it, async.
+
+###### Signatures
+
+*   `(description[, options], Callback): void`
+*   `(description[, options]): Promise<VFile>`
+
+###### Parameters
+
+*   `description` ([`Compatible`][api-compatible])
+    — path to file, file options, or file itself
+*   `options` ([`BufferEncoding`][api-buffer-encoding],
+    [`WriteOptions`][api-write-options], optional)
+*   `callback` ([`Callback`][api-callback], optional)
+    — callback called when done
+
+###### Returns
+
+Nothing when a callback is given, otherwise [promise][] that resolves to given
+file or new file ([`VFile`][vfile]).
+
+### `writeSync(description[, options])`
+
+Create a virtual file and write it, async.
+
+###### Parameters
+
+*   `description` ([`Compatible`][api-compatible])
+    — path to file, file options, or file itself
+*   `options` ([`BufferEncoding`][api-buffer-encoding],
+    [`WriteOptions`][api-write-options], optional)
+
+###### Returns
+
+Given file or new file ([`VFile`][vfile]).
+
+### `BufferEncoding`
+
+Encodings supported by the buffer class (TypeScript type).
+
+This is a copy of the types from Node and [`VFile`][vfile].
+
+###### Type
+
+```ts
+export type BufferEncoding =
+  | 'ascii'
+  | 'utf8'
+  | 'utf-8'
+  | 'utf16le'
+  | 'ucs2'
+  | 'ucs-2'
+  | 'base64'
+  | 'base64url'
+  | 'latin1'
+  | 'binary'
+  | 'hex'
+```
+
+### `Callback`
+
+Callback called after reading or writing a file (TypeScript type).
+
+###### Parameters
+
+*   `error` (`Error`, optional)
+    — error when reading or writing was not successful
+*   `file` ([`VFile`][vfile], optional)
+    — file when reading or writing was successful
+
+###### Returns
+
+Nothing (`void`).
+
+### `Compatible`
+
+URL to file, path to file, options for file, or actual file (TypeScript type).
+
+###### Type
+
+```ts
+export type Compatible = Buffer | URL | VFileOptions | VFile | string
+```
+
+<!-- To do: fix link to `VFileOptions` when `VFile` is updated -->
+
+See [`VFileOptions`][vfile] and [`VFile`][vfile].
+
+### `ReadOptions`
+
+Configuration for `fs.readFile` (TypeScript type).
+
+###### Fields
+
+*   `encoding` ([`BufferEncoding`][api-buffer-encoding], optional)
+    — encoding to read file as, will turn `file.value` into a string if passed
+*   `flag` (`string`, optional)
+    — file system flags to use
+
+### `WriteOptions`
+
+Configuration for `fs.writeFile` (TypeScript type).
+
+###### Fields
+
+*   `encoding` ([`BufferEncoding`][api-buffer-encoding], optional)
+    — encoding to write file as
+*   `mode` (`number | string`, optional)
+    — file mode (permission and sticky bits) if the file was newly created
+*   `flag` (`string`, optional)
+    — file system flags to use
 
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types `Compatible`, `Callback`, `BufferEncoding`,
-`Mode`, `ReadOptions`, and `WriteOptions`.
+It exports the additional types
+[`BufferEncoding`][api-buffer-encoding],
+[`Callback`][api-callback],
+[`Compatible`][api-compatible],
+[`ReadOptions`][api-read-options], and
+[`WriteOptions`][api-write-options].
 
 ## Compatibility
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Contribute
@@ -219,3 +363,23 @@ abide by its terms.
 [vfile]: https://github.com/vfile/vfile
 
 [promise]: https://developer.mozilla.org/Web/JavaScript/Reference/Global_Objects/Promise
+
+[api-read]: #readdescription-options-callback
+
+[api-read-sync]: #readsyncdescription-options
+
+[api-to-vfile]: #tovfiledescription
+
+[api-write]: #writedescription-options-callback
+
+[api-write-sync]: #writesyncdescription-options
+
+[api-buffer-encoding]: #bufferencoding
+
+[api-callback]: #callback
+
+[api-compatible]: #compatible
+
+[api-read-options]: #readoptions
+
+[api-write-options]: #writeoptions

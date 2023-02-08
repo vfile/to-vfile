@@ -13,7 +13,7 @@ const join = path.join
 
 const fixture = fs.readFileSync('readme.md', 'utf8')
 
-test('toVFile()', async (t) => {
+test('toVFile', async (t) => {
   assert.deepEqual(
     Object.keys(mod).sort(),
     ['read', 'readSync', 'toVFile', 'write', 'writeSync'],
