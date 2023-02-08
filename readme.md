@@ -196,7 +196,7 @@ file or new file ([`VFile`][vfile]).
 
 ### `writeSync(description[, options])`
 
-Create a virtual file and write it, async.
+Create a virtual file and write it, synchronously.
 
 ###### Parameters
 
@@ -218,7 +218,7 @@ This is a copy of the types from Node and [`VFile`][vfile].
 ###### Type
 
 ```ts
-export type BufferEncoding =
+type BufferEncoding =
   | 'ascii'
   | 'utf8'
   | 'utf-8'
@@ -254,7 +254,7 @@ URL to file, path to file, options for file, or actual file (TypeScript type).
 ###### Type
 
 ```ts
-export type Compatible = Buffer | URL | VFileOptions | VFile | string
+type Compatible = Buffer | URL | VFileOptions | VFile | string
 ```
 
 <!-- To do: fix link to `VFileOptions` when `VFile` is updated -->
