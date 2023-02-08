@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict'
 import {Buffer} from 'node:buffer'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -75,7 +76,7 @@ test('toVFile.readSync', (t) => {
 
   t.test('should fail without path', (t) => {
     t.throws(() => {
-      // @ts-ignore runtime.
+      // @ts-expect-error runtime.
       toVFile.readSync()
     }, /path/i)
 
@@ -146,6 +147,7 @@ test('toVFile.read', (t) => {
   t.test('should pass an error without path', (t) => {
     t.plan(1)
 
+    // @ts-expect-error: not a path.
     toVFile.read(null, (error) => {
       t.ok(/path/i.test(String(error)))
     })
@@ -156,6 +158,7 @@ test('toVFile.read', (t) => {
 
     toVFile.read('readme.md', (error, file) => {
       t.ifErr(error)
+      assert(file, 'expected file')
       t.equal(file.path, 'readme.md')
       t.ok(buffer(file.value))
       t.equal(file.toString(), fixture)
@@ -182,6 +185,7 @@ test('toVFile.read', (t) => {
 
     toVFile.read('readme.md', 'utf8', (error, file) => {
       t.ifErr(error)
+      assert(file, 'expected file')
       t.equal(file.path, 'readme.md')
       t.equal(typeof file.value, 'string')
       t.equal(file.toString(), fixture)
@@ -207,6 +211,7 @@ test('toVFile.read', (t) => {
     t.plan(3)
 
     toVFile.read('missing.md', 'utf8', (error, file) => {
+      assert(error, 'expected error')
       t.equal(file, undefined)
       t.ok(error instanceof Error)
       t.ok(/ENOENT/.test(error.message))
@@ -236,7 +241,7 @@ test('toVFile.writeSync', (t) => {
 
   t.test('should fail without path', (t) => {
     t.throws(() => {
-      // @ts-ignore runtime.
+      // @ts-expect-error runtime.
       toVFile.writeSync()
     }, /path/i)
 
@@ -296,6 +301,7 @@ test('toVFile.write', (t) => {
   t.test('should pass an error without path', (t) => {
     t.plan(1)
 
+    // @ts-expect-error: missing path.
     toVFile.write(null, (error) => {
       t.ok(/path/i.test(String(error)))
     })
@@ -308,6 +314,7 @@ test('toVFile.write', (t) => {
 
     toVFile.write(file, (error, result) => {
       t.ifErr(error)
+      assert(result, 'expected result')
       t.equal(result.path, filePath)
       t.equal(fs.readFileSync(filePath, 'utf8'), 'bäz')
     })
@@ -320,6 +327,7 @@ test('toVFile.write', (t) => {
 
     toVFile.write(file, (error, result) => {
       t.ifErr(error)
+      assert(result, 'expected result')
       t.equal(result.path, filePath)
       t.equal(fs.readFileSync(filePath, 'utf8'), 'qüx')
     })
@@ -346,6 +354,7 @@ test('toVFile.write', (t) => {
 
     toVFile.write(file, 'hex', (error, result) => {
       t.ifErr(error)
+      assert(result, 'expected result')
       t.equal(result.path, filePath)
       t.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
     })
@@ -373,6 +382,7 @@ test('toVFile.write', (t) => {
 
       fs.unlinkSync(filePath)
 
+      assert(result, 'expected result')
       t.ifErr(error)
       t.equal(result.path, filePath)
       t.equal(doc, '')
@@ -401,6 +411,7 @@ test('toVFile.write', (t) => {
     t.plan(1)
 
     toVFile.write(invalidFilePath, (error) => {
+      assert(error, 'expected error')
       t.ok(/ENOENT/.test(error.message))
     })
   })
