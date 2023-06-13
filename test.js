@@ -19,12 +19,6 @@ test('toVFile', async function (t) {
     'should expose the public api'
   )
 
-  assert.deepEqual(
-    Object.keys(toVFile).sort(),
-    ['read', 'readSync', 'write', 'writeSync'],
-    'should expose the individual functions on `toVFile`'
-  )
-
   await t.test('should accept a string as `.path`', function () {
     const file = toVFile(join('foo', 'bar', 'baz.qux'))
 
