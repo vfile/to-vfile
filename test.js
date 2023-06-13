@@ -7,15 +7,14 @@ import {fileURLToPath, URL} from 'node:url'
 import test from 'node:test'
 import buffer from 'is-buffer'
 import {toVFile, read, readSync, write, writeSync} from './index.js'
-import * as mod from './index.js'
 
 const join = path.join
 
 const fixture = fs.readFileSync('readme.md', 'utf8')
 
-test('toVFile', async (t) => {
+test('toVFile', async function (t) {
   assert.deepEqual(
-    Object.keys(mod).sort(),
+    Object.keys(await import('./index.js')).sort(),
     ['read', 'readSync', 'toVFile', 'write', 'writeSync'],
     'should expose the public api'
   )
@@ -26,7 +25,7 @@ test('toVFile', async (t) => {
     'should expose the individual functions on `toVFile`'
   )
 
-  await t.test('should accept a string as `.path`', () => {
+  await t.test('should accept a string as `.path`', function () {
     const file = toVFile(join('foo', 'bar', 'baz.qux'))
 
     assert.equal(file.path, join('foo', 'bar', 'baz.qux'))
@@ -37,14 +36,14 @@ test('toVFile', async (t) => {
     assert.equal(file.value, undefined)
   })
 
-  await t.test('should accept a buffer as `.path`', () => {
+  await t.test('should accept a buffer as `.path`', function () {
     const file = toVFile(Buffer.from('readme.md'))
 
     assert.equal(file.path, 'readme.md')
     assert.equal(file.value, undefined)
   })
 
-  await t.test('should accept an object', () => {
+  await t.test('should accept an object', function () {
     const file = toVFile({
       dirname: join('foo', 'bar'),
       stem: 'baz',
@@ -59,14 +58,14 @@ test('toVFile', async (t) => {
     assert.equal(file.value, undefined)
   })
 
-  await t.test('should accept a vfile', () => {
+  await t.test('should accept a vfile', function () {
     const first = toVFile()
     const second = toVFile(first)
 
     assert.equal(first, second)
   })
 
-  await t.test('should accept a WHATWG URL object', () => {
+  await t.test('should accept a WHATWG URL object', function () {
     const dir = fileURLToPath(new URL('./', import.meta.url))
     const file = toVFile(new URL('baz.qux', import.meta.url))
 
@@ -79,15 +78,15 @@ test('toVFile', async (t) => {
   })
 })
 
-test('readSync', async (t) => {
-  await t.test('should fail without path', () => {
-    assert.throws(() => {
+test('readSync', async function (t) {
+  await t.test('should fail without path', function () {
+    assert.throws(function () {
       // @ts-expect-error runtime.
       readSync()
     }, /path/i)
   })
 
-  await t.test('should work (buffer without encoding)', () => {
+  await t.test('should work (buffer without encoding)', function () {
     const file = readSync('readme.md')
 
     assert.equal(file.path, 'readme.md')
@@ -95,7 +94,7 @@ test('readSync', async (t) => {
     assert.equal(file.toString(), fixture)
   })
 
-  await t.test('should work (string with encoding)', () => {
+  await t.test('should work (string with encoding)', function () {
     const file = readSync('readme.md', 'utf8')
 
     assert.equal(file.path, 'readme.md')
@@ -104,14 +103,14 @@ test('readSync', async (t) => {
   })
 
   assert.throws(
-    () => {
+    function () {
       readSync('missing.md')
     },
     /ENOENT/,
     'should throw on non-existing files'
   )
 
-  await t.test('should honor file.cwd when file.path is relative', () => {
+  await t.test('should honor file.cwd when file.path is relative', function () {
     const cwd = path.join(process.cwd(), 'lib')
     const file = readSync({path: 'index.js', cwd}, 'utf8')
 
@@ -120,7 +119,7 @@ test('readSync', async (t) => {
 
   await t.test(
     'should honor file.cwd when file.path is relative, even with relative cwd',
-    () => {
+    function () {
       const file = readSync({path: 'index.js', cwd: 'lib'}, 'utf8')
 
       assert.equal(typeof file.value, 'string')
@@ -128,7 +127,7 @@ test('readSync', async (t) => {
   )
 
   assert.throws(
-    () => {
+    function () {
       readSync({
         path: path.join(process.cwd(), 'core.js'),
         cwd: path.join(process.cwd(), 'lib')
@@ -139,20 +138,20 @@ test('readSync', async (t) => {
   )
 })
 
-test('read', async (t) => {
-  await t.test('should pass an error without path', async () => {
-    await new Promise((ok) => {
+test('read', async function (t) {
+  await t.test('should pass an error without path', async function () {
+    await new Promise(function (ok) {
       // @ts-expect-error: not a path.
-      read(null, (error) => {
+      read(null, function (error) {
         assert.ok(/path/i.test(String(error)))
         ok(undefined)
       })
     })
   })
 
-  await t.test('should work (buffer without encoding)', async () => {
-    await new Promise((ok) => {
-      read('readme.md', (error, file) => {
+  await t.test('should work (buffer without encoding)', async function () {
+    await new Promise(function (ok) {
+      read('readme.md', function (error, file) {
         assert.ifError(error)
         assert(file, 'expected file')
         assert.equal(file.path, 'readme.md')
@@ -165,7 +164,7 @@ test('read', async (t) => {
 
   await t.test(
     'should work in promise mode (buffer without encoding)',
-    async () => {
+    async function () {
       const result = await read('readme.md')
       assert.equal(result.path, 'readme.md')
       assert.ok(buffer(result.value))
@@ -173,9 +172,9 @@ test('read', async (t) => {
     }
   )
 
-  await t.test('should work (string with encoding)', async () => {
-    await new Promise((ok) => {
-      read('readme.md', 'utf8', (error, file) => {
+  await t.test('should work (string with encoding)', async function () {
+    await new Promise(function (ok) {
+      read('readme.md', 'utf8', function (error, file) {
         assert.ifError(error)
         assert(file, 'expected file')
         assert.equal(file.path, 'readme.md')
@@ -188,7 +187,7 @@ test('read', async (t) => {
 
   await t.test(
     'should work in promise mode (string with encoding)',
-    async () => {
+    async function () {
       const result = await read('readme.md', 'utf8')
 
       assert.equal(result.path, 'readme.md')
@@ -197,21 +196,24 @@ test('read', async (t) => {
     }
   )
 
-  await t.test('should return an error on non-existing files', async () => {
-    await new Promise((ok) => {
-      read('missing.md', 'utf8', (error, file) => {
-        assert(error, 'expected error')
-        assert.equal(file, undefined)
-        assert.ok(error instanceof Error)
-        assert.ok(/ENOENT/.test(error.message))
-        ok(undefined)
+  await t.test(
+    'should return an error on non-existing files',
+    async function () {
+      await new Promise(function (ok) {
+        read('missing.md', 'utf8', function (error, file) {
+          assert(error, 'expected error')
+          assert.equal(file, undefined)
+          assert.ok(error instanceof Error)
+          assert.ok(/ENOENT/.test(error.message))
+          ok(undefined)
+        })
       })
-    })
-  })
+    }
+  )
 
   await t.test(
     'should reject on non-existing files in promise mode',
-    async () => {
+    async function () {
       try {
         await read('missing.md')
         assert.fail('should reject, not resolve')
@@ -223,18 +225,18 @@ test('read', async (t) => {
   )
 })
 
-test('writeSync', async (t) => {
+test('writeSync', async function (t) {
   const filePath = 'fixture.txt'
   const invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
 
-  await t.test('should fail without path', () => {
-    assert.throws(() => {
+  await t.test('should fail without path', function () {
+    assert.throws(function () {
       // @ts-expect-error runtime.
       writeSync()
     }, /path/i)
   })
 
-  await t.test('should work (buffer without encoding)', () => {
+  await t.test('should work (buffer without encoding)', function () {
     const result = writeSync({
       path: filePath,
       value: Buffer.from('föo')
@@ -245,7 +247,7 @@ test('writeSync', async (t) => {
     assert.equal(fs.readFileSync(filePath, 'utf8'), 'föo')
   })
 
-  await t.test('should work (string)', () => {
+  await t.test('should work (string)', function () {
     const result = writeSync({path: filePath, value: 'bär'})
 
     assert.equal(result.path, filePath)
@@ -253,7 +255,7 @@ test('writeSync', async (t) => {
     assert.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
   })
 
-  await t.test('should work (null)', () => {
+  await t.test('should work (null)', function () {
     const result = writeSync(filePath)
 
     assert.equal(result.path, filePath)
@@ -264,7 +266,7 @@ test('writeSync', async (t) => {
   })
 
   assert.throws(
-    () => {
+    function () {
       writeSync(invalidFilePath)
     },
     /ENOENT/,
@@ -272,25 +274,25 @@ test('writeSync', async (t) => {
   )
 })
 
-test('write', async (t) => {
+test('write', async function (t) {
   const filePath = 'fixture.txt'
   const invalidFilePath = join('invalid', 'path', 'to', 'fixture.txt')
 
-  await t.test('should pass an error without path', async () => {
-    await new Promise((ok) => {
+  await t.test('should pass an error without path', async function () {
+    await new Promise(function (ok) {
       // @ts-expect-error: missing path.
-      write(null, (error) => {
+      write(null, function (error) {
         assert.ok(/path/i.test(String(error)))
         ok(undefined)
       })
     })
   })
 
-  await t.test('should work (buffer without encoding)', async () => {
+  await t.test('should work (buffer without encoding)', async function () {
     const file = {path: filePath, value: Buffer.from('bäz')}
 
-    await new Promise((ok) => {
-      write(file, (error, result) => {
+    await new Promise(function (ok) {
+      write(file, function (error, result) {
         assert.ifError(error)
         assert(result, 'expected result')
         assert.equal(result.path, filePath)
@@ -300,11 +302,11 @@ test('write', async (t) => {
     })
   })
 
-  await t.test('should work (string)', async () => {
+  await t.test('should work (string)', async function () {
     const file = {path: filePath, value: 'qüx'}
 
-    await new Promise((ok) => {
-      write(file, (error, result) => {
+    await new Promise(function (ok) {
+      write(file, function (error, result) {
         assert.ifError(error)
         assert(result, 'expected result')
         assert.equal(result.path, filePath)
@@ -314,17 +316,17 @@ test('write', async (t) => {
     })
   })
 
-  await t.test('should work in promise mode (string)', async () => {
+  await t.test('should work in promise mode (string)', async function () {
     const result = await write({path: filePath, value: 'qüx-promise'})
     assert.equal(result.path, filePath)
     assert.equal(fs.readFileSync(filePath, 'utf8'), 'qüx-promise')
   })
 
-  await t.test('should work (string with encoding)', async () => {
+  await t.test('should work (string with encoding)', async function () {
     const file = {path: filePath, value: '62c3a472'}
 
-    await new Promise((ok) => {
-      write(file, 'hex', (error, result) => {
+    await new Promise(function (ok) {
+      write(file, 'hex', function (error, result) {
         assert.ifError(error)
         assert(result, 'expected result')
         assert.equal(result.path, filePath)
@@ -336,7 +338,7 @@ test('write', async (t) => {
 
   await t.test(
     'should work in promise mode (string with encoding)',
-    async () => {
+    async function () {
       const result = await write(
         {path: filePath, value: '62c3a4722d70726f6d697365'},
         'hex'
@@ -346,9 +348,9 @@ test('write', async (t) => {
     }
   )
 
-  await t.test('should work (null)', async () => {
-    await new Promise((ok) => {
-      write(filePath, (error, result) => {
+  await t.test('should work (null)', async function () {
+    await new Promise(function (ok) {
+      write(filePath, function (error, result) {
         const doc = fs.readFileSync(filePath, 'utf8')
 
         fs.unlinkSync(filePath)
@@ -362,7 +364,7 @@ test('write', async (t) => {
     })
   })
 
-  await t.test('should work in promise mode (null)', async () => {
+  await t.test('should work in promise mode (null)', async function () {
     const result = await write(filePath)
 
     const doc = fs.readFileSync(filePath, 'utf8')
@@ -375,9 +377,9 @@ test('write', async (t) => {
 
   await t.test(
     'should pass an error for files that cannot be written',
-    async () => {
-      await new Promise((ok) => {
-        write(invalidFilePath, (error) => {
+    async function () {
+      await new Promise(function (ok) {
+        write(invalidFilePath, function (error) {
           assert(error, 'expected error')
           assert.ok(/ENOENT/.test(error.message))
           ok(undefined)
@@ -388,7 +390,7 @@ test('write', async (t) => {
 
   await t.test(
     'should reject for files that cannot be written in promise mode',
-    async () => {
+    async function () {
       try {
         await write(invalidFilePath)
         assert.fail('should reject, not resolve')
