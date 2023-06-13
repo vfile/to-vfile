@@ -43,6 +43,12 @@ test('toVFile', async function (t) {
     assert.equal(file.value, undefined)
   })
 
+  await t.test('should accept a uint array as `.path`', function () {
+    const file = toVFile(new Uint8Array([0x61, 0x62, 0x63, 0x2e, 0x6d, 0x64]))
+
+    assert.equal(file.path, 'abc.md')
+  })
+
   await t.test('should accept an object', function () {
     const file = toVFile({
       dirname: join('foo', 'bar'),
