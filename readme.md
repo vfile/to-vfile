@@ -33,9 +33,10 @@
 
 ## What is this?
 
-This utility places file paths and the file system first.
+This utility puts the file system first.
 Where `vfile` itself focusses on file values (the file contents), this instead
-focuses on the file system, which is a common case when working with files.
+focuses on the file system, which is a common case when working with *actual*
+files from Node.js.
 
 ## When should I use this?
 
@@ -45,7 +46,7 @@ Use `vfile` if there might not be a file system.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ and 16.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install to-vfile
@@ -80,29 +81,29 @@ Yields:
 
 ```js
 VFile {
-  data: {},
-  messages: [],
-  history: [ 'readme.md' ],
-  cwd: '/Users/tilde/Projects/oss/to-vfile'
-}
-VFile {
-  data: {},
-  messages: [],
-  history: [ '/Users/tilde/Projects/oss/to-vfile/readme.md' ],
-  cwd: '/Users/tilde/Projects/oss/to-vfile'
-}
-VFile {
-  data: {},
-  messages: [],
-  history: [ '.git/HEAD' ],
   cwd: '/Users/tilde/Projects/oss/to-vfile',
+  data: {},
+  history: [ 'readme.md' ],
+  messages: []
+}
+VFile {
+  cwd: '/Users/tilde/Projects/oss/to-vfile',
+  data: {},
+  history: [ '/Users/tilde/Projects/oss/to-vfile/readme.md' ],
+  messages: []
+}
+VFile {
+  cwd: '/Users/tilde/Projects/oss/to-vfile',
+  data: {},
+  history: [ '.git/HEAD' ],
+  messages: [],
   value: <Buffer 72 65 66 3a 20 72 65 66 73 2f 68 65 61 64 73 2f 6d 61 69 6e 0a>
 }
 VFile {
-  data: {},
-  messages: [],
-  history: [ '.git/HEAD' ],
   cwd: '/Users/tilde/Projects/oss/to-vfile',
+  data: {},
+  history: [ '.git/HEAD' ],
+  messages: [],
   value: 'ref: refs/heads/main\n'
 }
 ```
@@ -213,7 +214,7 @@ Given file or new file ([`VFile`][vfile]).
 
 Encodings supported by the buffer class (TypeScript type).
 
-This is a copy of the types from Node and [`VFile`][vfile].
+This is a copy of the types from Node.
 
 ###### Type
 
@@ -254,12 +255,10 @@ URL to file, path to file, options for file, or actual file (TypeScript type).
 ###### Type
 
 ```ts
-type Compatible = Buffer | URL | VFileOptions | VFile | string
+type Compatible = Uint8Array | URL | VFile | VFileOptions | string
 ```
 
-<!-- To do: fix link to `VFileOptions` when `VFile` is updated -->
-
-See [`VFileOptions`][vfile] and [`VFile`][vfile].
+See [`VFileOptions`][vfile-options] and [`VFile`][vfile].
 
 ### `ReadOptions`
 
@@ -268,7 +267,7 @@ Configuration for `fs.readFile` (TypeScript type).
 ###### Fields
 
 *   `encoding` ([`BufferEncoding`][api-buffer-encoding], optional)
-    — encoding to read file as, will turn `file.value` into a string if passed
+    — encoding to read file as, will turn `file.value` into a `string` if passed
 *   `flag` (`string`, optional)
     — file system flags to use
 
@@ -279,7 +278,7 @@ Configuration for `fs.writeFile` (TypeScript type).
 ###### Fields
 
 *   `encoding` ([`BufferEncoding`][api-buffer-encoding], optional)
-    — encoding to write file as
+    — encoding to write file as when `file.value` is a `string`
 *   `mode` (`number | string`, optional)
     — file mode (permission and sticky bits) if the file was newly created
 *   `flag` (`string`, optional)
@@ -297,10 +296,13 @@ It exports the additional types
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 14.14+ and 16.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line, `vfile@^7`,
+compatible with Node.js 12.
 
 ## Contribute
 
@@ -361,6 +363,8 @@ abide by its terms.
 [author]: https://wooorm.com
 
 [vfile]: https://github.com/vfile/vfile
+
+[vfile-options]: https://github.com/vfile/vfile#options
 
 [promise]: https://developer.mozilla.org/Web/JavaScript/Reference/Global_Objects/Promise
 
