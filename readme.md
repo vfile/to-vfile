@@ -139,7 +139,7 @@ Create a virtual file and read it in, async.
 
 ###### Signatures
 
-*   `(description[, options], Callback): void`
+*   `(description[, options], Callback): undefined`
 *   `(description[, options]): Promise<VFile>`
 
 ###### Parameters
@@ -177,7 +177,7 @@ Create a virtual file and write it, async.
 
 ###### Signatures
 
-*   `(description[, options], Callback): void`
+*   `(description[, options], Callback): undefined`
 *   `(description[, options]): Promise<VFile>`
 
 ###### Parameters
@@ -220,16 +220,16 @@ This is a copy of the types from Node and [`VFile`][vfile].
 ```ts
 type BufferEncoding =
   | 'ascii'
-  | 'utf8'
-  | 'utf-8'
-  | 'utf16le'
-  | 'ucs2'
-  | 'ucs-2'
   | 'base64'
   | 'base64url'
-  | 'latin1'
   | 'binary'
   | 'hex'
+  | 'latin1'
+  | 'ucs-2'
+  | 'ucs2'
+  | 'utf-8'
+  | 'utf16le'
+  | 'utf8'
 ```
 
 ### `Callback`
@@ -245,7 +245,7 @@ Callback called after reading or writing a file (TypeScript type).
 
 ###### Returns
 
-Nothing (`void`).
+Nothing (`undefined`).
 
 ### `Compatible`
 

@@ -81,7 +81,7 @@ test('toVFile', async function (t) {
 test('readSync', async function (t) {
   await t.test('should fail without path', function () {
     assert.throws(function () {
-      // @ts-expect-error runtime.
+      // @ts-expect-error check that a runtime error is thrown.
       readSync()
     }, /path/i)
   })
@@ -141,8 +141,8 @@ test('readSync', async function (t) {
 test('read', async function (t) {
   await t.test('should pass an error without path', async function () {
     await new Promise(function (ok) {
-      // @ts-expect-error: not a path.
-      read(null, function (error) {
+      // @ts-expect-error: check that a runtime error is thrown.
+      read(undefined, function (error) {
         assert.ok(/path/i.test(String(error)))
         ok(undefined)
       })
@@ -231,7 +231,7 @@ test('writeSync', async function (t) {
 
   await t.test('should fail without path', function () {
     assert.throws(function () {
-      // @ts-expect-error runtime.
+      // @ts-expect-error check that a runtime error is thrown.
       writeSync()
     }, /path/i)
   })
@@ -255,7 +255,7 @@ test('writeSync', async function (t) {
     assert.equal(fs.readFileSync(filePath, 'utf8'), 'bär')
   })
 
-  await t.test('should work (null)', function () {
+  await t.test('should work (undefined)', function () {
     const result = writeSync(filePath)
 
     assert.equal(result.path, filePath)
@@ -280,8 +280,8 @@ test('write', async function (t) {
 
   await t.test('should pass an error without path', async function () {
     await new Promise(function (ok) {
-      // @ts-expect-error: missing path.
-      write(null, function (error) {
+      // @ts-expect-error: check that a runtime error is thrown.
+      write(undefined, function (error) {
         assert.ok(/path/i.test(String(error)))
         ok(undefined)
       })
@@ -348,7 +348,7 @@ test('write', async function (t) {
     }
   )
 
-  await t.test('should work (null)', async function () {
+  await t.test('should work (undefined)', async function () {
     await new Promise(function (ok) {
       write(filePath, function (error, result) {
         const doc = fs.readFileSync(filePath, 'utf8')
@@ -364,7 +364,7 @@ test('write', async function (t) {
     })
   })
 
-  await t.test('should work in promise mode (null)', async function () {
+  await t.test('should work in promise mode (undefined)', async function () {
     const result = await write(filePath)
 
     const doc = fs.readFileSync(filePath, 'utf8')
