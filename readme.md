@@ -55,15 +55,7 @@ npm install to-vfile
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {toVFile, read, readSync, write, writeSync} from 'https://esm.sh/to-vfile@7'
-```
-
-In browsers with [`esm.sh`][esmsh]:
-
-```html
-<script type="module">
-  import {toVFile, read, readSync, write, writeSync} from 'https://esm.sh/to-vfile@7?bundle'
-</script>
+import {toVFile, read, readSync, write, writeSync} from 'https://esm.sh/to-vfile@8'
 ```
 
 ## Use

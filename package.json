@@ -1,6 +1,6 @@
 {
   "name": "to-vfile",
-  "version": "7.2.4",
+  "version": "8.0.0",
   "description": "vfile utility to read and write to the file system",
   "license": "MIT",
   "keywords": [
