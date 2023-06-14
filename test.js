@@ -3,10 +3,10 @@ import {Buffer} from 'node:buffer'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import {fileURLToPath, URL} from 'node:url'
+import {fileURLToPath} from 'node:url'
 import test from 'node:test'
 import buffer from 'is-buffer'
-import {toVFile, read, readSync, write, writeSync} from './index.js'
+import {toVFile, read, readSync, write, writeSync} from 'to-vfile'
 
 const join = path.join
 
@@ -14,7 +14,7 @@ const fixture = fs.readFileSync('readme.md', 'utf8')
 
 test('toVFile', async function (t) {
   assert.deepEqual(
-    Object.keys(await import('./index.js')).sort(),
+    Object.keys(await import('to-vfile')).sort(),
     ['read', 'readSync', 'toVFile', 'write', 'writeSync'],
     'should expose the public api'
   )
