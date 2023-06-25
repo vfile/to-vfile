@@ -120,7 +120,7 @@ Otherwise, the options are passed through to `new VFile()`.
 ###### Parameters
 
 *   `description` ([`Compatible`][api-compatible], optional)
-    — fath to file, file options, or file itself
+    — path to file, file options, or file itself
 
 ###### Returns
 
